@@ -1,0 +1,105 @@
+# Mother MCP Configuration
+# This file configures how Mother MCP provisions skills for your project
+
+version: "1.0"
+
+# Agent configuration
+agent:
+  # How to detect which agent is being used
+  # Options: "auto", "claude", "copilot"
+  mode: auto
+  
+  # Install skills to both .github/skills and .claude/skills
+  # Useful for teams using both Claude and Copilot
+  sync_both: false
+  
+  # Force a specific agent (overrides detection)
+  # force: claude
+
+# Skill registries (in priority order)
+registry:
+  # Primary: Anthropic's official skills
+  - url: "https://github.com/anthropics/skills"
+    priority: 1
+    
+  # Secondary: GitHub's community collection
+  # - url: "https://github.com/github/awesome-copilot"
+  #   priority: 2
+    
+  # Your organization's private skills
+  # - url: "https://github.com/myorg/skills"
+  #   priority: 3
+  #   auth: "${GITHUB_TOKEN}"
+
+# Where to install skills (optional, defaults based on agent)
+# install_path: ".github/skills"
+
+# Agent-specific path overrides
+# agent_overrides:
+#   claude:
+#     install_path: ".claude/skills"
+#   copilot:
+#     install_path: ".github/skills"
+
+# Cache settings
+cache:
+  # How often to refresh the registry cache
+  refresh_interval_days: 7
+  # Where to store cache files
+  registry_cache: ".mcp/mother/cache"
+
+# Technology detection settings
+detection:
+  enabled: true
+  sources:
+    # Package manager files
+    - type: package_manager
+      patterns:
+        - "package.json"
+        - "requirements.txt"
+        - "pyproject.toml"
+        - "Cargo.toml"
+        - "go.mod"
+        - "pom.xml"
+        - "build.gradle"
+        
+    # Configuration files
+    - type: config
+      patterns:
+        - "tsconfig.json"
+        - "next.config.*"
+        - "vite.config.*"
+        - "Dockerfile"
+        - "docker-compose*.yaml"
+        - ".github/workflows/*.yaml"
+        
+    # README for additional context
+    - type: readme
+      file: "README.md"
+      extract:
+        - technologies
+        - stack
+        - built with
+
+# Manual skill management
+skills:
+  # Skills to always include (regardless of detection)
+  always_include: []
+  # Example:
+  # always_include:
+  #   - code-review
+  #   - testing-best-practices
+  
+  # Skills to never install
+  always_exclude: []
+  # Example:
+  # always_exclude:
+  #   - deprecated-framework
+
+# Sync behavior
+sync:
+  # Automatically remove skills when no longer detected
+  auto_remove: false
+  
+  # Ask before making changes (for interactive use)
+  prompt_on_changes: true
