@@ -189,18 +189,33 @@ Mother MCP auto-detects which agent is using it through multiple methods:
 
 **Claude Code** is automatically detected when the `CLAUDE_CODE` environment variable is set (which Claude Code does by default).
 
-## Custom Instructions Integration
+## Architecture: Static Instructions vs Dynamic Skills
 
-Add to your project's `CLAUDE.md` or `.github/copilot-instructions.md`:
+Mother MCP separates concerns between **static project documentation** and **dynamic skill provisioning**:
+
+| Component | Purpose | Managed By |
+|-----------|---------|------------|
+| `.github/copilot-instructions.md` | Project-specific AI guidance | Developer (static) |
+| `CLAUDE.md` | Claude-specific project instructions | Developer (static) |
+| `.mcp/mother/config.yaml` | Mother configuration & preferences | Mother MCP |
+| `.mcp/mother/project-context.yaml` | Detected tech stack (auto-generated) | Mother MCP |
+| `.github/skills/` or `.claude/skills/` | Auto-installed skill files | Mother MCP |
+
+**Key principle**: Mother MCP never modifies your instruction files. It only manages:
+- Its own config in `.mcp/mother/`
+- Skill files in the appropriate skills directory
+
+### Recommended Workflow
+
+Add this to your project's `CLAUDE.md` or `.github/copilot-instructions.md`:
 
 ```markdown
-## Skill Management
+## Startup
 
-At the start of each conversation:
-1. Call `sync_skills()` to ensure project skills are current
-2. Review any reported changes
-3. Skills are automatically loaded based on task relevance
+At the start of each conversation, call `sync_skills` to ensure project-relevant skills are loaded.
 ```
+
+This connects your static instructions to Mother's dynamic skill system.
 
 ## Development
 

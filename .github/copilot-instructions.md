@@ -1,5 +1,9 @@
 # Mother MCP Skills - AI Coding Instructions
 
+## Startup
+
+At the start of each conversation, call `sync_skills` to ensure project-relevant skills are loaded.
+
 ## Project Overview
 
 This is an **MCP (Model Context Protocol) server** that dynamically provisions AI agent skills based on project tech stack detection. It supports both Claude and GitHub Copilot agents.
