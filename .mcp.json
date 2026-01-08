@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "mother-skills": {
+      "command": "node",
+      "args": ["dist/index.js"],
+      "env": {
+        "MOTHER_PROJECT_PATH": "."
+      }
+    }
+  }
+}
