@@ -1,6 +1,15 @@
 # Mother MCP Skills
 
-A Model Context Protocol (MCP) server that dynamically provisions agent skills based on project context. Works with both **Claude** and **GitHub Copilot**.
+A Model Context Protocol (MCP) server that dynamically provisions agent skills based on project context. Works with both **Claude Code** and **GitHub Copilot**.
+
+## Supported Agents
+
+| Agent | Status | Detection |
+|-------|--------|----------|
+| Claude Code | ✅ Full Support | Auto-detected via `CLAUDE_CODE` env var |
+| Claude Desktop | ✅ Full Support | Auto-detected via MCP client info |
+| GitHub Copilot | ✅ Full Support | Auto-detected via VS Code environment |
+| Other MCP Clients | ✅ Generic Support | Falls back to generic profile |
 
 ## What It Does
 
@@ -26,6 +35,24 @@ npm run build
 ```
 
 ## Configuration
+
+### Claude Code
+
+Add to your project's `.mcp.json` or global config:
+
+```json
+{
+  "mcpServers": {
+    "mother-skills": {
+      "command": "node",
+      "args": ["/path/to/mcp-mother-skills/dist/index.js"],
+      "env": {
+        "MOTHER_PROJECT_PATH": "."
+      }
+    }
+  }
+}
+```
 
 ### Claude Desktop
 
@@ -150,12 +177,17 @@ Skills are installed based on detected agent:
 
 ## Agent Detection
 
-Mother MCP auto-detects which agent is using it:
+Mother MCP auto-detects which agent is using it through multiple methods:
 
-1. **Environment variables**: `CLAUDE_CODE`, `GITHUB_COPILOT`
-2. **MCP client info**: Client name contains "claude" or "copilot"
-3. **Project structure**: `.claude/` directory or `CLAUDE.md` exists
-4. **Home directory**: `~/.claude/skills/` or `~/.copilot/skills/` exists
+| Priority | Method | Claude Code | Claude Desktop | GitHub Copilot |
+|----------|--------|-------------|----------------|----------------|
+| 1 | Config override | `agent.force: claude` | `agent.force: claude` | `agent.force: copilot` |
+| 2 | Environment vars | `CLAUDE_CODE=1` | `CLAUDE_API_KEY` | `GITHUB_COPILOT`, `COPILOT_AGENT` |
+| 3 | MCP client info | Client name contains "claude" | Client name contains "claude" | Client name contains "copilot" or "vscode" |
+| 4 | Project structure | `.claude/` directory exists | `.claude/` directory exists | `.github/copilot-instructions.md` exists |
+| 5 | Home directory | `~/.claude/skills/` exists | `~/.claude/skills/` exists | `~/.copilot/skills/` exists |
+
+**Claude Code** is automatically detected when the `CLAUDE_CODE` environment variable is set (which Claude Code does by default).
 
 ## Custom Instructions Integration
 

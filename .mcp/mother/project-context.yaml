@@ -1,0 +1,29 @@
+generated_at: 2026-01-08T22:11:34.331Z
+detection_sources:
+  - package.json
+  - config files
+project:
+  name: mcp-mother-skills
+  description: MCP server that dynamically provisions agent skills based on project context
+detected:
+  languages:
+    - id: typescript
+      version: 5.3.0
+      confidence: 0.95
+      source: package.json (typescript)
+  frameworks: []
+  databases: []
+  infrastructure: []
+  tools:
+    - id: vitest
+      version: 1.2.0
+      confidence: 0.95
+      source: package.json (vitest)
+    - id: eslint
+      version: 8.55.0
+      confidence: 0.95
+      source: package.json (eslint)
+installed_skills: []
+manual:
+  include_skills: []
+  exclude_skills: []
