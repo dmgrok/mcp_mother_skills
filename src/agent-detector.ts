@@ -85,6 +85,14 @@ export class AgentDetector {
       return 'copilot';
     }
 
+    // OpenAI Codex indicators
+    if (process.env.CODEX_HOME || process.env.OPENAI_CODEX) {
+      return 'codex';
+    }
+    if (envKeys.some(key => key.startsWith('CODEX_'))) {
+      return 'codex';
+    }
+
     return null;
   }
 
@@ -94,6 +102,7 @@ export class AgentDetector {
     const clientName = this.mcpClientName.toLowerCase();
 
     if (clientName.includes('claude')) return 'claude';
+    if (clientName.includes('codex') || clientName.includes('openai')) return 'codex';
     if (clientName.includes('copilot')) return 'copilot';
     if (clientName.includes('vscode') || clientName.includes('vs code')) return 'copilot';
 
@@ -116,6 +125,16 @@ export class AgentDetector {
       return 'claude';
     }
 
+    // Check for Codex skills directory
+    if (await this.pathExists(path.join(this.projectPath, '.codex/skills'))) {
+      return 'codex';
+    }
+
+    // Check for AGENTS.md (Codex convention)
+    if (await this.pathExists(path.join(this.projectPath, 'AGENTS.md'))) {
+      return 'codex';
+    }
+
     // Check for Copilot instructions
     if (await this.pathExists(path.join(this.projectPath, '.github/copilot-instructions.md'))) {
       return 'copilot';
@@ -130,6 +149,11 @@ export class AgentDetector {
     // Check for Claude personal skills
     if (await this.pathExists(path.join(home, '.claude/skills'))) {
       return 'claude';
+    }
+
+    // Check for Codex personal skills
+    if (await this.pathExists(path.join(home, '.codex/skills'))) {
+      return 'codex';
     }
 
     // Check for Copilot personal skills

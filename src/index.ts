@@ -68,7 +68,7 @@ const TOOLS: Tool[] = [
 This tool:
 - Scans project files to detect your tech stack (package.json, requirements.txt, config files, etc.)
 - Compares with the skill registry to find matching skills
-- Downloads missing skills to the appropriate location (.github/skills or .claude/skills)
+- Downloads missing skills to the appropriate location (.github/skills, .claude/skills, or .codex/skills)
 - Reports changes (added/removed/updated skills)
 
 Call this at the start of each conversation to ensure you have the right skills loaded.`,
@@ -87,7 +87,7 @@ Call this at the start of each conversation to ensure you have the right skills 
         },
         agent: {
           type: 'string',
-          enum: ['auto', 'claude', 'copilot', 'both'],
+          enum: ['auto', 'claude', 'copilot', 'codex', 'both'],
           description: 'Override agent detection for this sync',
           default: 'auto'
         }
@@ -166,14 +166,14 @@ Call this at the start of each conversation to ensure you have the right skills 
   },
   {
     name: 'set_agent_preference',
-    description: 'Set the preferred agent (Claude or Copilot) for skill installation.',
+    description: 'Set the preferred agent (Claude, Copilot, or Codex) for skill installation.',
     inputSchema: {
       type: 'object',
       properties: {
         agent: {
           type: 'string',
-          enum: ['auto', 'claude', 'copilot', 'both'],
-          description: 'Agent preference: auto (detect), claude, copilot, or both'
+          enum: ['auto', 'claude', 'copilot', 'codex', 'both'],
+          description: 'Agent preference: auto (detect), claude, copilot, codex, or both'
         }
       },
       required: ['agent']

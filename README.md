@@ -1,6 +1,6 @@
 # Mother MCP Skills
 
-A Model Context Protocol (MCP) server that dynamically provisions agent skills based on project context. Works with both **Claude Code** and **GitHub Copilot**.
+A Model Context Protocol (MCP) server that dynamically provisions agent skills based on project context. Works with **Claude Code**, **GitHub Copilot**, and **OpenAI Codex**.
 
 ## Supported Agents
 
@@ -9,6 +9,7 @@ A Model Context Protocol (MCP) server that dynamically provisions agent skills b
 | Claude Code | ✅ Full Support | Auto-detected via `CLAUDE_CODE` env var |
 | Claude Desktop | ✅ Full Support | Auto-detected via MCP client info |
 | GitHub Copilot | ✅ Full Support | Auto-detected via VS Code environment |
+| OpenAI Codex | ✅ Full Support | Auto-detected via `CODEX_HOME` env var |
 | Other MCP Clients | ✅ Generic Support | Falls back to generic profile |
 
 ## What It Does
@@ -17,8 +18,8 @@ Mother MCP automatically:
 
 1. **Detects** your project's tech stack by scanning `package.json`, `requirements.txt`, config files, and README
 2. **Matches** detected technologies to available skills from trusted registries
-3. **Downloads** relevant skills to the appropriate location (`.github/skills` or `.claude/skills`)
-4. **Adapts** to whichever AI agent you're using (Claude or Copilot)
+3. **Downloads** relevant skills to the appropriate location (`.github/skills`, `.claude/skills`, or `.codex/skills`)
+4. **Adapts** to whichever AI agent you're using (Claude, Copilot, or Codex)
 
 ## Installation
 
@@ -173,21 +174,22 @@ Skills are installed based on detected agent:
 |-------|--------------|----------|
 | Claude | `.claude/skills/` | `.github/skills/` |
 | Copilot | `.github/skills/` | `.claude/skills/` |
+| Codex | `.codex/skills/` | `.github/skills/` |
 | Both | Both locations | - |
 
 ## Agent Detection
 
 Mother MCP auto-detects which agent is using it through multiple methods:
 
-| Priority | Method | Claude Code | Claude Desktop | GitHub Copilot |
-|----------|--------|-------------|----------------|----------------|
-| 1 | Config override | `agent.force: claude` | `agent.force: claude` | `agent.force: copilot` |
-| 2 | Environment vars | `CLAUDE_CODE=1` | `CLAUDE_API_KEY` | `GITHUB_COPILOT`, `COPILOT_AGENT` |
-| 3 | MCP client info | Client name contains "claude" | Client name contains "claude" | Client name contains "copilot" or "vscode" |
-| 4 | Project structure | `.claude/` directory exists | `.claude/` directory exists | `.github/copilot-instructions.md` exists |
-| 5 | Home directory | `~/.claude/skills/` exists | `~/.claude/skills/` exists | `~/.copilot/skills/` exists |
+| Priority | Method | Claude | Copilot | Codex |
+|----------|--------|--------|---------|-------|
+| 1 | Config override | `agent.force: claude` | `agent.force: copilot` | `agent.force: codex` |
+| 2 | Environment vars | `CLAUDE_CODE=1` | `GITHUB_COPILOT` | `CODEX_HOME` |
+| 3 | MCP client info | Contains "claude" | Contains "copilot"/"vscode" | Contains "codex"/"openai" |
+| 4 | Project structure | `.claude/` or `CLAUDE.md` | `.github/copilot-instructions.md` | `.codex/skills/` or `AGENTS.md` |
+| 5 | Home directory | `~/.claude/skills/` | `~/.copilot/skills/` | `~/.codex/skills/` |
 
-**Claude Code** is automatically detected when the `CLAUDE_CODE` environment variable is set (which Claude Code does by default).
+**Note:** Codex skills follow the [Open Agent Skills Standard](https://agentskills.io/) specification.
 
 ## Architecture: Static Instructions vs Dynamic Skills
 
@@ -195,8 +197,9 @@ Mother MCP separates concerns between **static project documentation** and **dyn
 
 | Component | Purpose | Managed By |
 |-----------|---------|------------|
-| `.github/copilot-instructions.md` | Project-specific AI guidance | Developer (static) |
+| `.github/copilot-instructions.md` | Project-specific AI guidance (Copilot) | Developer (static) |
 | `CLAUDE.md` | Claude-specific project instructions | Developer (static) |
+| `AGENTS.md` | Codex/OpenAI project instructions | Developer (static) |
 | `.mcp/mother/config.yaml` | Mother configuration & preferences | Mother MCP |
 | `.mcp/mother/project-context.yaml` | Detected tech stack (auto-generated) | Mother MCP |
 | `.github/skills/` or `.claude/skills/` | Auto-installed skill files | Mother MCP |

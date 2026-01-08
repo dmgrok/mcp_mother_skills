@@ -194,7 +194,7 @@ export class ConfigManager {
   /**
    * Update config agent preference
    */
-  async setAgentPreference(agent: 'auto' | 'claude' | 'copilot' | 'both'): Promise<void> {
+  async setAgentPreference(agent: 'auto' | 'claude' | 'copilot' | 'codex' | 'both'): Promise<void> {
     const config = await this.loadConfig();
     
     if (agent === 'both') {
@@ -202,7 +202,7 @@ export class ConfigManager {
     } else {
       config.agent.sync_both = false;
       if (agent !== 'auto') {
-        config.agent.force = agent as 'claude' | 'copilot';
+        config.agent.force = agent as 'claude' | 'copilot' | 'codex';
       } else {
         delete config.agent.force;
       }

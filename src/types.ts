@@ -3,8 +3,8 @@
  */
 
 // Agent types
-export type AgentId = 'claude' | 'copilot' | 'generic';
-export type AgentMode = 'auto' | 'claude' | 'copilot' | 'both';
+export type AgentId = 'claude' | 'copilot' | 'codex' | 'generic';
+export type AgentMode = 'auto' | 'claude' | 'copilot' | 'codex' | 'both';
 
 export interface AgentProfile {
   id: AgentId;
