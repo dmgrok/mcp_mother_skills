@@ -6,7 +6,7 @@ version: "1.0"
 # Agent configuration
 agent:
   # How to detect which agent is being used
-  # Options: "auto", "claude", "copilot"
+  # Options: "auto", "claude", "copilot", "codex"
   mode: auto
   
   # Install skills to both .github/skills and .claude/skills
@@ -18,13 +18,16 @@ agent:
 
 # Skill registries (in priority order)
 registry:
-  # Primary: Anthropic's official skills
-  - url: "https://github.com/anthropics/skills"
+  # Primary: Agent Skills Directory (aggregates Anthropic, OpenAI, GitHub skills)
+  # See: https://github.com/dmgrok/agent_skills_directory
+  - url: "https://cdn.jsdelivr.net/gh/dmgrok/agent_skills_directory@main/catalog.json"
     priority: 1
     
-  # Secondary: GitHub's community collection
-  # - url: "https://github.com/github/awesome-copilot"
+  # Alternative: Direct from provider repositories
+  # - url: "https://github.com/anthropics/skills"
   #   priority: 2
+  # - url: "https://github.com/openai/skills"
+  #   priority: 3
     
   # Your organization's private skills
   # - url: "https://github.com/myorg/skills"

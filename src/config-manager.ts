@@ -20,7 +20,7 @@ const DEFAULT_CONFIG: MotherConfig = {
   },
   registry: [
     {
-      url: 'https://github.com/anthropics/skills',
+      url: 'https://cdn.jsdelivr.net/gh/dmgrok/agent_skills_directory@main/catalog.json',
       priority: 1
     }
   ],
