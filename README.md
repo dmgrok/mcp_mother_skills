@@ -111,12 +111,12 @@ This will:
 | Command | Description |
 |---------|-------------|
 | `get_project_context` | View detected stack and installed skills |
-| `get_agent_info` | See which agent is detected (Claude/Copilot) |
+| `get_agent_info` | See which agent is detected (Claude/Copilot/Codex) |
 | `search_skills` | Search for available skills |
 | `install_skill` | Manually install a skill |
 | `uninstall_skill` | Remove a skill |
 | `check_updates` | Check for skill updates |
-| `set_agent_preference` | Set preferred agent (auto/claude/copilot/both) |
+| `set_agent_preference` | Set preferred agent (auto/claude/copilot/codex/both) |
 | `redetect` | Re-scan project files |
 
 ## Project Configuration
@@ -136,11 +136,11 @@ Mother MCP creates a `.mcp/mother/` directory in your project:
 version: "1.0"
 
 agent:
-  mode: auto          # auto, claude, copilot
+  mode: auto          # auto, claude, copilot, codex
   sync_both: false    # Install to both .github/skills and .claude/skills
 
 registry:
-  - url: "https://github.com/anthropics/skills"
+  - url: "https://cdn.jsdelivr.net/gh/dmgrok/agent_skills_directory@main/catalog.json"
     priority: 1
 
 cache:
@@ -153,6 +153,30 @@ skills:
 sync:
   auto_remove: false  # Remove skills when no longer detected
 ```
+
+## Skills Registry
+
+Mother MCP fetches skills from the [Agent Skills Directory](https://github.com/dmgrok/agent_skills_directory), an automatically updated catalog aggregating skills from multiple providers:
+
+| Provider | Repository | Skills |
+|----------|------------|--------|
+| Anthropic | [anthropics/skills](https://github.com/anthropics/skills) | 16 |
+| OpenAI | [openai/skills](https://github.com/openai/skills) | 10 |
+| GitHub | [github/awesome-copilot](https://github.com/github/awesome-copilot) | 3 |
+
+### Available Skills
+
+**Documents & Data**: `pdf`, `docx`, `pptx`, `xlsx`, `doc-coauthoring`
+
+**Creative & Design**: `frontend-design`, `canvas-design`, `theme-factory`, `brand-guidelines`, `algorithmic-art`, `web-artifacts-builder`
+
+**Development**: `mcp-builder`, `skill-creator`, `webapp-testing`, `internal-comms`, `create-plan`, `gh-fix-ci`, `gh-address-comments`
+
+**Enterprise**: `linear`, `slack-gif-creator`, `notion-spec-to-implementation`, `notion-meeting-intelligence`, `notion-knowledge-capture`, `notion-research-documentation`
+
+**Infrastructure**: `azure-role-selector`, `snowflake-semanticview`
+
+The catalog is refreshed automatically. See [catalog.json](https://cdn.jsdelivr.net/gh/dmgrok/agent_skills_directory@main/catalog.json) for the full list.
 
 ## How Skills Are Matched
 
