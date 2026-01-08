@@ -21,6 +21,14 @@ export const AGENT_PROFILES: Record<AgentId, AgentProfile> = {
     instructionsFile: 'COPILOT.md',
     customInstructionsPath: '.github/copilot-instructions.md'
   },
+  codex: {
+    id: 'codex',
+    name: 'OpenAI Codex',
+    projectSkillPaths: ['.codex/skills', '.github/skills'],
+    personalSkillPath: '~/.codex/skills',
+    instructionsFile: 'AGENTS.md',
+    customInstructionsPath: '.codex/config.yaml'
+  },
   generic: {
     id: 'generic',
     name: 'AI Agent',

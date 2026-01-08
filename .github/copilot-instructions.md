@@ -42,18 +42,24 @@ npm run test:watch # Watch mode for TDD
 
 ### Type Definitions
 All types live in [src/types.ts](src/types.ts). Key interfaces:
-- `AgentId`: `'claude' | 'copilot' | 'generic'`
+- `AgentId`: `'claude' | 'copilot' | 'codex' | 'generic'`
 - `DetectedStack`: `{ languages, frameworks, databases, infrastructure, tools }`
 - `RegistrySkill`: Skill metadata with triggers (`packages[]`, `files[]`)
 - `SyncResult`: Operation result with `added/updated/removed/unchanged`
 
 ### Agent Detection Priority (in `agent-detector.ts`)
 1. Explicit config override (`config.agent.force`)
-2. Environment variables (`CLAUDE_CODE`, `GITHUB_COPILOT`, `VSCODE_PID`)
+2. Environment variables (`CLAUDE_CODE`, `GITHUB_COPILOT`, `CODEX_HOME`)
 3. MCP client info string
-4. Project structure (`.claude/` dir, `CLAUDE.md`, `.github/copilot-instructions.md`)
-5. Home directory (`~/.claude/skills`, `~/.copilot/skills`)
+4. Project structure (`.claude/`, `.codex/skills/`, `CLAUDE.md`, `AGENTS.md`, `.github/copilot-instructions.md`)
+5. Home directory (`~/.claude/skills`, `~/.copilot/skills`, `~/.codex/skills`)
 6. Fallback to `generic`
+
+### Codex Compatibility
+Skills follow the [Open Agent Skills Standard](https://agentskills.io/):
+- Codex skills stored in `.codex/skills/` per OpenAI spec
+- `SKILL.md` frontmatter uses `name` + `description` (required)
+- Optional: `scripts/`, `references/`, `assets/` directories
 
 ### Skill Matching (in `skill-installer.ts`)
 Skills match via triggers defined in registry:
