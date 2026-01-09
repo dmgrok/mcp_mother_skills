@@ -2,6 +2,8 @@
 
 A Model Context Protocol (MCP) server that dynamically provisions agent skills based on project context. Works with **Claude Code**, **GitHub Copilot**, and **OpenAI Codex**.
 
+**🔍 [Browse Available Skills](https://dmgrok.github.io/mcp_mother_skills/)** - Search and explore the skills catalog
+
 ## Supported Agents
 
 | Agent | Status | Detection |
@@ -164,6 +166,10 @@ Mother MCP fetches skills from the [Agent Skills Directory](https://github.com/d
 | OpenAI | [openai/skills](https://github.com/openai/skills) | 10 |
 | GitHub | [github/awesome-copilot](https://github.com/github/awesome-copilot) | 3 |
 
+### Browse Skills
+
+**🔍 [Skills Browser](https://dmgrok.github.io/mcp_mother_skills/)** - Interactive search and exploration of all available skills
+
 ### Available Skills
 
 **Documents & Data**: `pdf`, `docx`, `pptx`, `xlsx`, `doc-coauthoring`
@@ -176,7 +182,7 @@ Mother MCP fetches skills from the [Agent Skills Directory](https://github.com/d
 
 **Infrastructure**: `azure-role-selector`, `snowflake-semanticview`
 
-The catalog is refreshed automatically. See [catalog.json](https://cdn.jsdelivr.net/gh/dmgrok/agent_skills_directory@main/catalog.json) for the full list.
+The catalog is refreshed automatically from the [Agent Skills Directory](https://github.com/dmgrok/agent_skills_directory).
 
 ## How Skills Are Matched
 
