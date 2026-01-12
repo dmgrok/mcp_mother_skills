@@ -19,7 +19,9 @@ import {
   InstallSkillParams, 
   UninstallSkillParams,
   SetAgentPreferenceParams,
-  SyncResult
+  ConfirmSyncParams,
+  SyncResult,
+  SyncPreview
 } from './types.js';
 import { AgentDetector } from './agent-detector.js';
 import { ProjectDetector } from './project-detector.js';
@@ -68,10 +70,12 @@ const TOOLS: Tool[] = [
 This tool:
 - Scans project files to detect your tech stack (package.json, requirements.txt, config files, etc.)
 - Compares with the skill registry to find matching skills
-- Downloads missing skills to the appropriate location (.github/skills, .claude/skills, or .codex/skills)
-- Reports changes (added/removed/updated skills)
+- Shows a PREVIEW of changes and asks for user confirmation before applying
+- Distinguishes between manually configured skills (always_include) and auto-discovered skills
+- Downloads approved skills to the appropriate location (.github/skills, .claude/skills, or .codex/skills)
 
-Call this at the start of each conversation to ensure you have the right skills loaded.`,
+IMPORTANT: This tool will show proposed changes and wait for user approval before making changes.
+Use dry_run=true to see changes without any prompt for confirmation.`,
     inputSchema: {
       type: 'object',
       properties: {
@@ -82,7 +86,7 @@ Call this at the start of each conversation to ensure you have the right skills 
         },
         dry_run: {
           type: 'boolean',
-          description: 'Show what would change without making changes',
+          description: 'Show what would change without making changes or prompting',
           default: false
         },
         agent: {
@@ -90,8 +94,67 @@ Call this at the start of each conversation to ensure you have the right skills 
           enum: ['auto', 'claude', 'copilot', 'codex', 'both'],
           description: 'Override agent detection for this sync',
           default: 'auto'
+        },
+        skip_confirmation: {
+          type: 'boolean',
+          description: 'Skip user confirmation and apply all changes immediately (use with caution)',
+          default: false
         }
       }
+    }
+  },
+  {
+    name: 'preview_sync',
+    description: `Preview skill changes without applying them.
+Shows what skills would be added, updated, or removed, distinguishing between:
+- **Manual skills**: Configured in always_include (user explicitly requested)
+- **Discovered skills**: Auto-detected from project tech stack
+- **Dependencies**: Required by other skills
+
+Returns a preview_id that can be used with confirm_sync to apply selected changes.`,
+    inputSchema: {
+      type: 'object',
+      properties: {
+        force_refresh: {
+          type: 'boolean',
+          description: 'Force re-fetch from registry even if cache is fresh',
+          default: false
+        },
+        agent: {
+          type: 'string',
+          enum: ['auto', 'claude', 'copilot', 'codex', 'both'],
+          description: 'Override agent detection for this preview',
+          default: 'auto'
+        }
+      }
+    }
+  },
+  {
+    name: 'confirm_sync',
+    description: `Confirm and apply skill changes from a preview.
+Use after preview_sync to apply approved changes. You can:
+- Apply all changes by just providing the preview_id
+- Selectively approve specific skills with approved_skills
+- Reject specific skills with rejected_skills`,
+    inputSchema: {
+      type: 'object',
+      properties: {
+        preview_id: {
+          type: 'string',
+          description: 'The preview_id from a previous preview_sync call'
+        },
+        approved_skills: {
+          type: 'array',
+          items: { type: 'string' },
+          description: 'List of skill names to approve (if omitted, all non-rejected are approved)'
+        },
+        rejected_skills: {
+          type: 'array',
+          items: { type: 'string' },
+          description: 'List of skill names to reject'
+        }
+      },
+      required: ['preview_id']
     }
   },
   {
@@ -190,23 +253,77 @@ Call this at the start of each conversation to ensure you have the right skills 
 ];
 
 // Tool handlers
-async function handleSyncSkills(params: SyncSkillsParams): Promise<SyncResult> {
+async function handleSyncSkills(params: SyncSkillsParams & { skip_confirmation?: boolean }): Promise<{ preview?: SyncPreview; result?: SyncResult; requires_confirmation: boolean }> {
   const config = await configManager.loadConfig();
   const { stack, sources } = await projectDetector.detect();
   const projectInfo = await projectDetector.getProjectInfo();
   const installedSkills = await skillInstaller.getInstalledSkills();
 
-  const result = await skillInstaller.syncSkills(stack, installedSkills, {
+  // If dry_run, just return preview without any changes
+  if (params.dry_run) {
+    const preview = await skillInstaller.previewSync(stack, installedSkills, {
+      forceRefresh: params.force_refresh,
+      agent: params.agent
+    });
+    return { preview, requires_confirmation: false };
+  }
+
+  // If skip_confirmation or prompt_on_changes is false, do immediate sync
+  if (params.skip_confirmation || !config.sync.prompt_on_changes) {
+    const result = await skillInstaller.syncSkills(stack, installedSkills, {
+      forceRefresh: params.force_refresh,
+      dryRun: false,
+      agent: params.agent
+    });
+
+    // Update context
+    const newInstalled = await skillInstaller.getInstalledSkills();
+    await configManager.updateContext(projectInfo, stack, sources, newInstalled);
+
+    return { result, requires_confirmation: false };
+  }
+
+  // Otherwise, generate preview and require confirmation
+  const preview = await skillInstaller.previewSync(stack, installedSkills, {
     forceRefresh: params.force_refresh,
-    dryRun: params.dry_run,
     agent: params.agent
   });
 
-  // Update context
-  if (!params.dry_run) {
-    const newInstalled = await skillInstaller.getInstalledSkills();
-    await configManager.updateContext(projectInfo, stack, sources, newInstalled);
+  // If no changes, return early
+  if (preview.pending_changes.length === 0) {
+    return { 
+      preview, 
+      requires_confirmation: false 
+    };
   }
+
+  return { preview, requires_confirmation: true };
+}
+
+async function handlePreviewSync(params: SyncSkillsParams): Promise<SyncPreview> {
+  const { stack } = await projectDetector.detect();
+  const installedSkills = await skillInstaller.getInstalledSkills();
+
+  const preview = await skillInstaller.previewSync(stack, installedSkills, {
+    forceRefresh: params.force_refresh,
+    agent: params.agent
+  });
+
+  return preview;
+}
+
+async function handleConfirmSync(params: ConfirmSyncParams): Promise<SyncResult> {
+  const result = await skillInstaller.confirmSync(
+    params.preview_id,
+    params.approved_skills,
+    params.rejected_skills
+  );
+
+  // Update context after confirmation
+  const { stack, sources } = await projectDetector.detect();
+  const projectInfo = await projectDetector.getProjectInfo();
+  const newInstalled = await skillInstaller.getInstalledSkills();
+  await configManager.updateContext(projectInfo, stack, sources, newInstalled);
 
   return result;
 }
@@ -401,6 +518,63 @@ function formatSyncResult(result: SyncResult): string {
   return output;
 }
 
+// Format preview for display
+function formatPreview(preview: SyncPreview): string {
+  let output = `## Skill Sync Preview\n\n`;
+  
+  if (preview.pending_changes.length === 0) {
+    output += `✅ **No changes needed** - all skills are up to date.\n\n`;
+    return output;
+  }
+
+  output += `**Preview ID:** \`${preview.preview_id}\`\n\n`;
+  output += `⚠️ **The following changes require your approval:**\n\n`;
+
+  // Group by action
+  const toAdd = preview.pending_changes.filter(c => c.action === 'add');
+  const toUpdate = preview.pending_changes.filter(c => c.action === 'update');
+  const toRemove = preview.pending_changes.filter(c => c.action === 'remove');
+
+  if (toAdd.length > 0) {
+    output += `### Skills to Add (${toAdd.length})\n`;
+    for (const change of toAdd) {
+      const sourceIcon = change.source === 'manual' ? '📌' : change.source === 'dependency' ? '🔗' : '🔍';
+      const sourceLabel = change.source === 'manual' ? 'Manual' : change.source === 'dependency' ? 'Dependency' : 'Auto-discovered';
+      output += `- ${sourceIcon} **${change.name}** (v${change.version}) - ${sourceLabel}\n`;
+      output += `  _${change.reason}_\n`;
+    }
+    output += '\n';
+  }
+
+  if (toUpdate.length > 0) {
+    output += `### Skills to Update (${toUpdate.length})\n`;
+    for (const change of toUpdate) {
+      const sourceIcon = change.source === 'manual' ? '📌' : '🔍';
+      output += `- ${sourceIcon} **${change.name}** (v${change.oldVersion} → v${change.version})\n`;
+      output += `  _${change.reason}_\n`;
+    }
+    output += '\n';
+  }
+
+  if (toRemove.length > 0) {
+    output += `### Skills to Remove (${toRemove.length})\n`;
+    for (const change of toRemove) {
+      output += `- ❌ **${change.name}** (v${change.version})\n`;
+      output += `  _${change.reason}_\n`;
+    }
+    output += '\n';
+  }
+
+  output += `---\n\n`;
+  output += `**Legend:** 📌 Manual | 🔍 Auto-discovered | 🔗 Dependency\n\n`;
+  output += `### How to proceed:\n`;
+  output += `- To **approve all changes**, use \`confirm_sync\` with preview_id: \`${preview.preview_id}\`\n`;
+  output += `- To **selectively approve**, provide \`approved_skills\` array\n`;
+  output += `- To **reject specific skills**, provide \`rejected_skills\` array\n`;
+
+  return output;
+}
+
 // Create and run server
 async function main(): Promise<void> {
   await initializeComponents();
@@ -431,10 +605,39 @@ async function main(): Promise<void> {
 
       switch (name) {
         case 'sync_skills':
-          const syncResult = await handleSyncSkills((args || {}) as SyncSkillsParams);
+          const syncResponse = await handleSyncSkills((args || {}) as SyncSkillsParams & { skip_confirmation?: boolean });
+          if (syncResponse.requires_confirmation && syncResponse.preview) {
+            result = {
+              formatted: formatPreview(syncResponse.preview),
+              preview: syncResponse.preview,
+              message: 'Please review the changes above and use confirm_sync to apply them.'
+            };
+          } else if (syncResponse.result) {
+            result = {
+              formatted: formatSyncResult(syncResponse.result),
+              data: syncResponse.result
+            };
+          } else if (syncResponse.preview) {
+            result = {
+              formatted: formatPreview(syncResponse.preview),
+              preview: syncResponse.preview
+            };
+          }
+          break;
+
+        case 'preview_sync':
+          const preview = await handlePreviewSync((args || {}) as SyncSkillsParams);
           result = {
-            formatted: formatSyncResult(syncResult),
-            data: syncResult
+            formatted: formatPreview(preview),
+            preview
+          };
+          break;
+
+        case 'confirm_sync':
+          const confirmResult = await handleConfirmSync(args as unknown as ConfirmSyncParams);
+          result = {
+            formatted: formatSyncResult(confirmResult),
+            data: confirmResult
           };
           break;
 

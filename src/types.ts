@@ -134,10 +134,28 @@ export interface MotherConfig {
 }
 
 // Sync result types
+export type SkillSource = 'manual' | 'discovery' | 'dependency';
+
 export interface SkillChange {
   name: string;
   version: string;
   oldVersion?: string;
+  source?: SkillSource;
+  matchedBy?: string;
+}
+
+// Preview types for user validation
+export interface PendingSkillChange extends SkillChange {
+  action: 'add' | 'update' | 'remove';
+  reason: string;
+}
+
+export interface SyncPreview {
+  pending_changes: PendingSkillChange[];
+  manual_skills: string[];
+  discovered_skills: string[];
+  requires_confirmation: boolean;
+  preview_id: string;
 }
 
 export interface SyncResult {
@@ -172,4 +190,10 @@ export interface UninstallSkillParams {
 
 export interface SetAgentPreferenceParams {
   agent: AgentMode;
+}
+
+export interface ConfirmSyncParams {
+  preview_id: string;
+  approved_skills?: string[];
+  rejected_skills?: string[];
 }

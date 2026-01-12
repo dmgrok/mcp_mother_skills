@@ -12,6 +12,9 @@ import {
   DetectedStack,
   SyncResult,
   SkillChange,
+  SkillSource,
+  PendingSkillChange,
+  SyncPreview,
   MotherConfig
 } from './types.js';
 import { RegistryClient } from './registry-client.js';
@@ -21,7 +24,17 @@ export interface SkillMatch {
   skill: RegistrySkill;
   matchedBy: string;
   confidence: number;
+  source: SkillSource;
 }
+
+// Store pending syncs for confirmation
+const pendingSyncs = new Map<string, {
+  preview: SyncPreview;
+  matches: SkillMatch[];
+  installPath: string;
+  installedSkills: InstalledSkill[];
+  timestamp: number;
+}>();
 
 export class SkillInstaller {
   private projectPath: string;
@@ -39,6 +52,224 @@ export class SkillInstaller {
     this.config = config;
     this.registryClient = registryClient;
     this.agentProfile = agentProfile;
+  }
+
+  /**
+   * Generate a preview of skill changes for user validation
+   */
+  async previewSync(
+    detectedStack: DetectedStack,
+    installedSkills: InstalledSkill[],
+    options: { forceRefresh?: boolean; agent?: string } = {}
+  ): Promise<SyncPreview> {
+    // Get all available skills from registry
+    const availableSkills = await this.registryClient.getAllSkills(options.forceRefresh);
+
+    // Match skills to detected stack (auto-discovered)
+    const matchedSkills = this.matchSkillsToStack(detectedStack, availableSkills);
+
+    // Add manually required skills
+    for (const skillName of this.config.skills.always_include) {
+      const skill = availableSkills.find(s => s.name === skillName);
+      if (skill && !matchedSkills.find(m => m.skill.name === skillName)) {
+        matchedSkills.push({
+          skill,
+          matchedBy: 'manual (always_include)',
+          confidence: 1.0,
+          source: 'manual'
+        });
+      }
+    }
+
+    // Remove excluded skills
+    const filteredSkills = matchedSkills.filter(
+      m => !this.config.skills.always_exclude.includes(m.skill.name)
+    );
+
+    // Resolve dependencies
+    const resolvedSkills = await this.resolveDependencies(filteredSkills, availableSkills);
+
+    // Filter out excluded skills again (they may have been added as dependencies)
+    const finalSkills = resolvedSkills.filter(
+      m => !this.config.skills.always_exclude.includes(m.skill.name)
+    );
+
+    // Build pending changes list
+    const pendingChanges: PendingSkillChange[] = [];
+    const manualSkills: string[] = [];
+    const discoveredSkills: string[] = [];
+
+    // Process each skill to determine action
+    for (const match of finalSkills) {
+      const existing = installedSkills.find(s => s.name === match.skill.name);
+      
+      if (match.source === 'manual') {
+        manualSkills.push(match.skill.name);
+      } else {
+        discoveredSkills.push(match.skill.name);
+      }
+
+      if (existing) {
+        // Check if update needed
+        if (existing.version !== match.skill.version) {
+          pendingChanges.push({
+            name: match.skill.name,
+            version: match.skill.version,
+            oldVersion: existing.version,
+            source: match.source,
+            matchedBy: match.matchedBy,
+            action: 'update',
+            reason: `Update from v${existing.version} to v${match.skill.version} (${match.source === 'manual' ? 'manually configured' : 'auto-discovered'})`
+          });
+        }
+      } else {
+        // New skill
+        pendingChanges.push({
+          name: match.skill.name,
+          version: match.skill.version,
+          source: match.source,
+          matchedBy: match.matchedBy,
+          action: 'add',
+          reason: match.source === 'manual' 
+            ? `Manually configured in always_include`
+            : `Auto-discovered: ${match.matchedBy}`
+        });
+      }
+    }
+
+    // Check for skills to remove
+    if (this.config.sync.auto_remove) {
+      const requiredNames = new Set(finalSkills.map(m => m.skill.name));
+      for (const installed of installedSkills) {
+        if (!requiredNames.has(installed.name)) {
+          pendingChanges.push({
+            name: installed.name,
+            version: installed.version,
+            source: 'discovery', // Was previously discovered
+            action: 'remove',
+            reason: 'No longer matches detected stack and not in always_include'
+          });
+        }
+      }
+    }
+
+    // Generate preview ID
+    const previewId = `sync_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+    
+    const preview: SyncPreview = {
+      pending_changes: pendingChanges,
+      manual_skills: manualSkills,
+      discovered_skills: discoveredSkills,
+      requires_confirmation: pendingChanges.length > 0 && this.config.sync.prompt_on_changes,
+      preview_id: previewId
+    };
+
+    // Store for later confirmation
+    const installPath = this.getInstallPath(this.agentProfile);
+    pendingSyncs.set(previewId, {
+      preview,
+      matches: finalSkills,
+      installPath,
+      installedSkills,
+      timestamp: Date.now()
+    });
+
+    // Clean up old pending syncs (older than 5 minutes)
+    const fiveMinutesAgo = Date.now() - 5 * 60 * 1000;
+    for (const [id, data] of pendingSyncs) {
+      if (data.timestamp < fiveMinutesAgo) {
+        pendingSyncs.delete(id);
+      }
+    }
+
+    return preview;
+  }
+
+  /**
+   * Confirm and execute a pending sync
+   */
+  async confirmSync(
+    previewId: string,
+    approvedSkills?: string[],
+    rejectedSkills?: string[]
+  ): Promise<SyncResult> {
+    const pending = pendingSyncs.get(previewId);
+    if (!pending) {
+      throw new Error(`Preview "${previewId}" not found or expired. Please run preview_sync again.`);
+    }
+
+    const result: SyncResult = {
+      added: [],
+      updated: [],
+      removed: [],
+      unchanged: [],
+      agent: [this.agentProfile.id],
+      paths: [pending.installPath],
+      detected_stack: { languages: [], frameworks: [], databases: [], infrastructure: [], tools: [] }
+    };
+
+    // Create install directory
+    await fs.mkdir(pending.installPath, { recursive: true });
+
+    // Process approved changes
+    for (const change of pending.preview.pending_changes) {
+      // Skip if explicitly rejected
+      if (rejectedSkills?.includes(change.name)) {
+        continue;
+      }
+
+      // If approvedSkills is provided, only process those
+      if (approvedSkills && !approvedSkills.includes(change.name)) {
+        continue;
+      }
+
+      if (change.action === 'add') {
+        const match = pending.matches.find(m => m.skill.name === change.name);
+        if (match) {
+          await this.installSkill(match.skill, pending.installPath);
+          result.added.push({
+            name: change.name,
+            version: change.version,
+            source: change.source
+          });
+        }
+      } else if (change.action === 'update') {
+        const match = pending.matches.find(m => m.skill.name === change.name);
+        if (match) {
+          await this.installSkill(match.skill, pending.installPath);
+          result.updated.push({
+            name: change.name,
+            version: change.version,
+            oldVersion: change.oldVersion,
+            source: change.source
+          });
+        }
+      } else if (change.action === 'remove') {
+        await this.uninstallSkill(change.name, pending.installPath);
+        result.removed.push({
+          name: change.name,
+          version: change.version,
+          source: change.source
+        });
+      }
+    }
+
+    // Mark unchanged skills
+    for (const installed of pending.installedSkills) {
+      const wasChanged = [...result.added, ...result.updated, ...result.removed]
+        .some(c => c.name === installed.name);
+      if (!wasChanged) {
+        result.unchanged.push({
+          name: installed.name,
+          version: installed.version
+        });
+      }
+    }
+
+    // Clean up
+    pendingSyncs.delete(previewId);
+
+    return result;
   }
 
   /**
@@ -76,7 +307,8 @@ export class SkillInstaller {
         matchedSkills.push({
           skill,
           matchedBy: 'manual (always_include)',
-          confidence: 1.0
+          confidence: 1.0,
+          source: 'manual'
         });
       }
     }
@@ -282,7 +514,8 @@ export class SkillInstaller {
         matches.push({
           skill,
           matchedBy: `detected: ${directMatch.source}`,
-          confidence: directMatch.confidence
+          confidence: directMatch.confidence,
+          source: 'discovery'
         });
         continue;
       }
@@ -296,7 +529,8 @@ export class SkillInstaller {
             matches.push({
               skill,
               matchedBy: `package trigger: ${detected.source}`,
-              confidence: detected.confidence * 0.9
+              confidence: detected.confidence * 0.9,
+              source: 'discovery'
             });
             break;
           }
@@ -334,7 +568,8 @@ export class SkillInstaller {
               const depMatch: SkillMatch = {
                 skill: depSkill,
                 matchedBy: `dependency of ${current.skill.name}`,
-                confidence: current.confidence * 0.8
+                confidence: current.confidence * 0.8,
+                source: 'dependency'
               };
               resolved.set(depName, depMatch);
               toProcess.push(depMatch);
