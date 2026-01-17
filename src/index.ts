@@ -39,9 +39,13 @@ let projectDetector: ProjectDetector;
 let registryClient: RegistryClient;
 let skillInstaller: SkillInstaller;
 
-async function initializeComponents(): Promise<void> {
-  configManager = new ConfigManager(PROJECT_PATH);
-  const config = await configManager.initializeConfig();
+async function initializeComponents(forceReload: boolean = false): Promise<void> {
+  // Always reload config to pick up changes; components are lightweight to reinitialize
+  if (forceReload || !configManager) {
+    configManager = new ConfigManager(PROJECT_PATH);
+  }
+  
+  const config = await configManager.loadConfig();
 
   agentDetector = new AgentDetector(PROJECT_PATH, config);
   projectDetector = new ProjectDetector(PROJECT_PATH);
@@ -599,6 +603,9 @@ async function main(): Promise<void> {
   // Call tool handler
   server.setRequestHandler(CallToolRequestSchema, async (request) => {
     const { name, arguments: args } = request.params;
+    
+    // Reload config on each tool call to pick up any external changes
+    await initializeComponents();
 
     try {
       let result: unknown;

@@ -78,6 +78,25 @@ agent:
       expect(config.agent.sync_both).toBe(false); // Default
       expect(config.cache.refresh_interval_days).toBe(7); // Default
     });
+
+    it('should fall back to default registry when none provided', async () => {
+      const emptyRegistryConfig = `
+agent:
+  mode: auto
+registry: []
+`;
+
+      vi.mocked(fs.readFile).mockResolvedValue(emptyRegistryConfig);
+
+      const config = await configManager.loadConfig();
+
+      expect(config.registry).toEqual([
+        {
+          url: 'https://cdn.jsdelivr.net/gh/dmgrok/agent_skills_directory@main/catalog.toon',
+          priority: 1
+        }
+      ]);
+    });
   });
 
   describe('saveConfig', () => {

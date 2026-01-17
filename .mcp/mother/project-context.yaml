@@ -23,7 +23,13 @@ detected:
       version: 8.55.0
       confidence: 0.95
       source: package.json (eslint)
-installed_skills: []
+installed_skills:
+  - name: mcp-builder
+    version: 1.0.0
+    source: https://cdn.jsdelivr.net/gh/dmgrok/agent_skills_directory@main/catalog.toon
+    installed_at: 2026-01-18T00:52:00.000Z
+    path: .github/skills/anthropics-mcp-builder
 manual:
-  include_skills: []
+  include_skills:
+    - mcp-builder
   exclude_skills: []

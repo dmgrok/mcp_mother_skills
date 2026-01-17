@@ -51,10 +51,14 @@ export class RegistryClient {
           // Higher priority registries take precedence
           if (!seenSkills.has(skill.name)) {
             seenSkills.add(skill.name);
+            const resolvedPath = skill.path && skill.path.startsWith('http')
+              ? skill.path
+              : `${registry.url}/${skill.path}`;
+
             allSkills.push({
               ...skill,
               // Add source info
-              path: `${registry.url}/${skill.path}`
+              path: resolvedPath
             });
           }
         }
@@ -227,6 +231,25 @@ export class RegistryClient {
    * Fetch registry index from GitHub
    */
   private async fetchRegistryIndex(registry: RegistrySource): Promise<RegistryIndex> {
+    // Direct catalog URLs (.json or .toon) are fetched and parsed without GitHub scanning
+    if (registry.url.endsWith('.json')) {
+      const response = await fetch(registry.url);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch registry index: ${response.status}`);
+      }
+      const json = await response.json();
+      return this.parseJsonCatalog(json);
+    }
+
+    if (registry.url.endsWith('.toon')) {
+      const response = await fetch(registry.url);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch registry index: ${response.status}`);
+      }
+      const content = await response.text();
+      return this.parseToonCatalog(content);
+    }
+
     // Parse GitHub URL
     const urlMatch = registry.url.match(/github\.com\/([^/]+)\/([^/]+)/);
     if (!urlMatch) {
@@ -274,6 +297,81 @@ export class RegistryClient {
         tags: skill.tags || [],
         last_updated: skill.last_updated
       }))
+    };
+  }
+
+  /**
+   * Parse JSON catalog (cdn/registry) format
+   */
+  private parseJsonCatalog(json: any): RegistryIndex {
+    const skills = (json.skills || []).map((skill: any) => {
+      const repo = skill.source?.repo;
+      const skillPath = skill.source?.path;
+      const path = repo && skillPath
+        ? `${repo}/tree/main/${skillPath}`
+        : skill.path || skill.id;
+
+      return {
+        name: skill.name || skill.id,
+        path,
+        version: skill.version || '1.0.0',
+        description: skill.description || '',
+        triggers: skill.triggers || {},
+        dependencies: skill.dependencies || [],
+        tags: (skill.tags || []).map((t: any) => String(t)),
+        last_updated: skill.source?.commit_sha || json.generated_at
+      } as RegistrySkill;
+    });
+
+    return {
+      version: json.version || '1.0',
+      last_updated: json.generated_at || new Date().toISOString(),
+      skills
+    };
+  }
+
+  /**
+   * Parse .toon catalog format (custom, yaml-like)
+   */
+  private parseToonCatalog(content: string): RegistryIndex {
+    const yaml = require('yaml');
+
+    const normalizeList = (line: string, indent: string): string => {
+      const [, list] = line.split(':');
+      const items = (list || '').split(',').map((v: string) => v.trim()).filter(Boolean);
+      const itemIndent = `${indent}  `;
+      return `${indent}${line.trim().startsWith('tags[') ? 'tags' : 'categories'}:\n${items.map(i => `${itemIndent}- ${i}`).join('\n')}`;
+    };
+
+    let normalized = content.replace(/\r/g, '');
+    normalized = normalized.replace(/^skills\[\d+\]:/m, 'skills:');
+    normalized = normalized.replace(/^(\s*)categories\[\d+\]:.*$/m, (match: string, indent: string) => normalizeList(match, indent || ''));
+    normalized = normalized.replace(/^(\s*)tags\[\d+\]:.*$/gm, (match: string, indent: string) => normalizeList(match, indent || '    '));
+
+    const parsed = yaml.parse(normalized);
+    const skills = (parsed?.skills || []).map((skill: any) => {
+      const repo = skill.source?.repo;
+      const skillPath = skill.source?.path;
+      const path = repo && skillPath
+        ? `${repo}/tree/main/${skillPath}`
+        : skill.path || skill.id;
+
+      return {
+        name: skill.name || skill.id,
+        path,
+        version: skill.version || '1.0.0',
+        description: skill.description || '',
+        triggers: skill.triggers || {},
+        dependencies: skill.dependencies || [],
+        tags: (skill.tags || []).map((t: any) => String(t)),
+        last_updated: skill.source?.commit_sha || parsed?.generated_at
+      } as RegistrySkill;
+    });
+
+    return {
+      version: parsed?.version || '1.0',
+      last_updated: parsed?.generated_at || new Date().toISOString(),
+      skills
     };
   }
 

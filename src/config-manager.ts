@@ -20,7 +20,7 @@ const DEFAULT_CONFIG: MotherConfig = {
   },
   registry: [
     {
-      url: 'https://cdn.jsdelivr.net/gh/dmgrok/agent_skills_directory@main/catalog.json',
+      url: 'https://cdn.jsdelivr.net/gh/dmgrok/agent_skills_directory@main/catalog.toon',
       priority: 1
     }
   ],
@@ -222,13 +222,18 @@ export class ConfigManager {
    * Merge loaded config with defaults
    */
   private mergeWithDefaults(loaded: Partial<MotherConfig>): MotherConfig {
+    const mergedRegistry =
+      loaded.registry && loaded.registry.length > 0
+        ? loaded.registry
+        : DEFAULT_CONFIG.registry;
+
     return {
       version: loaded.version || DEFAULT_CONFIG.version,
       agent: {
         ...DEFAULT_CONFIG.agent,
         ...loaded.agent
       },
-      registry: loaded.registry || DEFAULT_CONFIG.registry,
+      registry: mergedRegistry,
       install_path: loaded.install_path,
       agent_overrides: loaded.agent_overrides,
       cache: {

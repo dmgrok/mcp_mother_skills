@@ -215,6 +215,50 @@ skills:
       expect(tsSkills).toHaveLength(1);
       expect(tsSkills[0].version).toBe('1.0.0');
     });
+
+    it('should parse toon catalog format', async () => {
+      const toonRegistry: RegistrySource[] = [
+        { url: 'https://cdn.jsdelivr.net/gh/dmgrok/agent_skills_directory@main/catalog.toon', priority: 1 }
+      ];
+
+      const toonClient = new RegistryClient(toonRegistry, mockCachePath, 7);
+
+      vi.mocked(fs.readFile).mockRejectedValue(new Error('ENOENT'));
+      vi.mocked(fs.mkdir).mockResolvedValue(undefined);
+      vi.mocked(fs.writeFile).mockResolvedValue(undefined);
+
+      const toonContent = `
+$schema: "https://raw.githubusercontent.com/dmgrok/agent_skills_directory/main/schema/catalog-schema.json"
+version: 2026.01.09
+generated_at: "2026-01-09T13:28:40.037090+00:00"
+total_skills: 1
+categories[1]: development
+skills[1]:
+  - id: demo/skill
+    name: demo-skill
+    description: "Demo skill"
+    provider: demo
+    category: development
+    source:
+      repo: "https://github.com/demo/skills"
+      path: skills/demo
+      skill_md_url: "https://raw.githubusercontent.com/demo/skills/main/skills/demo/SKILL.md"
+      commit_sha: abc123
+    tags[2]: foo,bar
+`;
+
+      mockFetch.mockResolvedValue({
+        ok: true,
+        text: () => Promise.resolve(toonContent)
+      } as any);
+
+      const skills = await toonClient.getAllSkills();
+
+      expect(skills).toHaveLength(1);
+      expect(skills[0].name).toBe('demo-skill');
+      expect(skills[0].path).toBe('https://github.com/demo/skills/tree/main/skills/demo');
+      expect(skills[0].tags).toEqual(['foo', 'bar']);
+    });
   });
 
   describe('searchSkills', () => {
