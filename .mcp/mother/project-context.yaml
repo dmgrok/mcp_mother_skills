@@ -1,4 +1,4 @@
-generated_at: 2026-01-08T22:22:56.628Z
+generated_at: 2026-01-18T07:57:49.144Z
 detection_sources:
   - package.json
   - config files
@@ -16,7 +16,7 @@ detected:
   infrastructure: []
   tools:
     - id: vitest
-      version: 1.2.0
+      version: 4.0.17
       confidence: 0.95
       source: package.json (vitest)
     - id: eslint
@@ -24,11 +24,11 @@ detected:
       confidence: 0.95
       source: package.json (eslint)
 installed_skills:
-  - name: mcp-builder
+  - name: anthropics-mcp-builder
     version: 1.0.0
-    source: https://cdn.jsdelivr.net/gh/dmgrok/agent_skills_directory@main/catalog.toon
-    installed_at: 2026-01-18T00:52:00.000Z
-    path: .github/skills/anthropics-mcp-builder
+    source: unknown
+    installed_at: 2026-01-17T23:56:18.928Z
+    path: /Users/a447ah/Github/mcp_mother_skills/.github/skills/anthropics-mcp-builder
 manual:
   include_skills:
     - mcp-builder

@@ -69,6 +69,27 @@ async function initializeComponents(forceReload: boolean = false): Promise<void>
 // Define tools
 const TOOLS: Tool[] = [
   {
+    name: 'setup',
+    description: `**Start here!** Initialize Mother MCP for your project.
+This is the recommended first step when setting up Mother MCP. It will:
+1. Scan your project to detect technologies (languages, frameworks, databases, tools)
+2. Fetch the skill registry and find matching skills for your stack
+3. Show recommended skills with match explanations
+4. Let you choose which skills to install
+
+Use this tool when users say things like "setup mother mcp", "initialize", "get started", or "what skills do I need".`,
+    inputSchema: {
+      type: 'object',
+      properties: {
+        auto_install: {
+          type: 'boolean',
+          description: 'Automatically install all recommended skills without confirmation',
+          default: false
+        }
+      }
+    }
+  },
+  {
     name: 'sync_skills',
     description: `Synchronize project skills based on detected technologies. 
 This tool:
@@ -257,6 +278,170 @@ Use after preview_sync to apply approved changes. You can:
 ];
 
 // Tool handlers
+
+interface SetupParams {
+  auto_install?: boolean;
+}
+
+interface SkillRecommendation {
+  skill: {
+    name: string;
+    description: string;
+    tags: string[];
+  };
+  match_reason: string;
+  matched_technologies: string[];
+  confidence: 'high' | 'medium' | 'low';
+}
+
+async function handleSetup(params: SetupParams): Promise<object> {
+  // Force refresh to ensure we have latest registry
+  await initializeComponents(true);
+  
+  // Step 1: Detect project tech stack
+  const { stack, sources } = await projectDetector.detect();
+  const projectInfo = await projectDetector.getProjectInfo();
+  const installedSkills = await skillInstaller.getInstalledSkills();
+  const detection = await agentDetector.detect();
+  
+  // Step 2: Fetch all available skills from registry
+  const allSkills = await registryClient.getAllSkills(true);
+  
+  // Step 3: Find matching skills based on detected stack
+  const recommendations: SkillRecommendation[] = [];
+  const installedNames = new Set(installedSkills.map(s => s.name));
+  
+  // Collect all detected tech IDs
+  const detectedTech = new Set<string>();
+  stack.languages.forEach(l => detectedTech.add(l.id.toLowerCase()));
+  stack.frameworks.forEach(f => detectedTech.add(f.id.toLowerCase()));
+  stack.databases.forEach(d => detectedTech.add(d.id.toLowerCase()));
+  stack.infrastructure.forEach(i => detectedTech.add(i.id.toLowerCase()));
+  stack.tools.forEach(t => detectedTech.add(t.id.toLowerCase()));
+  
+  for (const skill of allSkills) {
+    if (installedNames.has(skill.name)) continue;
+    
+    const matchedTech: string[] = [];
+    let confidence: 'high' | 'medium' | 'low' = 'low';
+    
+    // Check triggers
+    const triggers = skill.triggers || {};
+    
+    // Check package triggers
+    if (triggers.packages) {
+      for (const pkg of triggers.packages) {
+        if (detectedTech.has(pkg.toLowerCase())) {
+          matchedTech.push(pkg);
+          confidence = 'high';
+        }
+      }
+    }
+    
+    // Check file triggers
+    if (triggers.files) {
+      for (const file of triggers.files) {
+        const pattern = file.replace('*', '').toLowerCase();
+        if ([...detectedTech].some(t => t.includes(pattern) || pattern.includes(t))) {
+          matchedTech.push(file);
+          if (confidence !== 'high') confidence = 'medium';
+        }
+      }
+    }
+    
+    // Check tags match
+    const skillTags = (skill.tags || []).map(t => t.toLowerCase());
+    for (const tech of detectedTech) {
+      if (skillTags.includes(tech)) {
+        matchedTech.push(tech);
+        if (confidence !== 'high') confidence = 'medium';
+      }
+    }
+    
+    // Check name/description for tech mentions
+    const skillText = `${skill.name} ${skill.description}`.toLowerCase();
+    for (const tech of detectedTech) {
+      if (skillText.includes(tech) && !matchedTech.includes(tech)) {
+        matchedTech.push(tech);
+        if (confidence === 'low') confidence = 'low';
+      }
+    }
+    
+    if (matchedTech.length > 0) {
+      recommendations.push({
+        skill: {
+          name: skill.name,
+          description: skill.description,
+          tags: skill.tags || []
+        },
+        match_reason: `Matches your ${matchedTech.join(', ')} stack`,
+        matched_technologies: matchedTech,
+        confidence
+      });
+    }
+  }
+  
+  // Sort by confidence (high first) then by number of matches
+  recommendations.sort((a, b) => {
+    const confOrder = { high: 0, medium: 1, low: 2 };
+    if (confOrder[a.confidence] !== confOrder[b.confidence]) {
+      return confOrder[a.confidence] - confOrder[b.confidence];
+    }
+    return b.matched_technologies.length - a.matched_technologies.length;
+  });
+  
+  // If auto_install, install all high/medium confidence recommendations
+  let installed: string[] = [];
+  if (params.auto_install) {
+    const toInstall = recommendations
+      .filter(r => r.confidence !== 'low')
+      .map(r => r.skill.name);
+    
+    for (const skillName of toInstall) {
+      const result = await skillInstaller.installSkillByName(skillName);
+      if (result) {
+        installed.push(skillName);
+        await configManager.addManualSkill(skillName);
+      }
+    }
+  }
+  
+  // Update context
+  const newInstalled = await skillInstaller.getInstalledSkills();
+  await configManager.updateContext(projectInfo, stack, sources, newInstalled);
+  
+  return {
+    project: projectInfo,
+    detected_stack: {
+      languages: stack.languages.map(l => ({ name: l.id, version: l.version })),
+      frameworks: stack.frameworks.map(f => ({ name: f.id, version: f.version })),
+      databases: stack.databases.map(d => ({ name: d.id })),
+      infrastructure: stack.infrastructure.map(i => ({ name: i.id })),
+      tools: stack.tools.map(t => ({ name: t.id, version: t.version }))
+    },
+    detection_sources: sources,
+    agent: {
+      detected: detection.agent.name,
+      method: detection.method,
+      skill_path: detection.agent.projectSkillPaths[0]
+    },
+    registry: {
+      total_skills: allSkills.length,
+      url: (await configManager.loadConfig()).registry[0]?.url
+    },
+    already_installed: installedSkills.map(s => s.name),
+    recommendations: recommendations.slice(0, 10), // Top 10 recommendations
+    auto_installed: installed.length > 0 ? installed : undefined,
+    next_steps: installed.length > 0 
+      ? ['Skills installed! You can use search_skills to find more.']
+      : [
+          'Review the recommendations above',
+          'Use install_skill to add specific skills',
+          'Or use sync_skills with skip_confirmation=true to install all matches'
+        ]
+  };
+}
+
 async function handleSyncSkills(params: SyncSkillsParams & { skip_confirmation?: boolean }): Promise<{ preview?: SyncPreview; result?: SyncResult; requires_confirmation: boolean }> {
   const config = await configManager.loadConfig();
   const { stack, sources } = await projectDetector.detect();
@@ -522,6 +707,103 @@ function formatSyncResult(result: SyncResult): string {
   return output;
 }
 
+// Format setup result for display
+function formatSetupResult(result: any): string {
+  let output = `## 🚀 Mother MCP Setup Complete\n\n`;
+  
+  // Project info
+  output += `### Project: ${result.project?.name || 'Unknown'}\n`;
+  if (result.project?.description) {
+    output += `${result.project.description}\n`;
+  }
+  output += '\n';
+  
+  // Detected stack
+  output += `### Detected Tech Stack\n`;
+  const { detected_stack } = result;
+  
+  if (detected_stack?.languages?.length > 0) {
+    output += `**Languages:** ${detected_stack.languages.map((l: any) => l.version ? `${l.name} (${l.version})` : l.name).join(', ')}\n`;
+  }
+  if (detected_stack?.frameworks?.length > 0) {
+    output += `**Frameworks:** ${detected_stack.frameworks.map((f: any) => f.version ? `${f.name} (${f.version})` : f.name).join(', ')}\n`;
+  }
+  if (detected_stack?.databases?.length > 0) {
+    output += `**Databases:** ${detected_stack.databases.map((d: any) => d.name).join(', ')}\n`;
+  }
+  if (detected_stack?.tools?.length > 0) {
+    output += `**Tools:** ${detected_stack.tools.map((t: any) => t.name).join(', ')}\n`;
+  }
+  output += `\n_Sources: ${result.detection_sources?.join(', ') || 'N/A'}_\n\n`;
+  
+  // Agent detection
+  output += `### Agent\n`;
+  output += `**Detected:** ${result.agent?.detected || 'Unknown'} (via ${result.agent?.method || 'auto'})\n`;
+  output += `**Skills path:** \`${result.agent?.skill_path || 'N/A'}\`\n\n`;
+  
+  // Registry info
+  output += `### Registry\n`;
+  output += `**Available skills:** ${result.registry?.total_skills || 0}\n\n`;
+  
+  // Already installed
+  if (result.already_installed?.length > 0) {
+    output += `### Already Installed\n`;
+    output += result.already_installed.map((s: string) => `✅ ${s}`).join('\n') + '\n\n';
+  }
+  
+  // Auto-installed
+  if (result.auto_installed?.length > 0) {
+    output += `### 🎉 Auto-Installed Skills\n`;
+    output += result.auto_installed.map((s: string) => `✅ ${s}`).join('\n') + '\n\n';
+  }
+  
+  // Recommendations
+  if (result.recommendations?.length > 0) {
+    output += `### 💡 Recommended Skills\n\n`;
+    
+    const highConf = result.recommendations.filter((r: any) => r.confidence === 'high');
+    const medConf = result.recommendations.filter((r: any) => r.confidence === 'medium');
+    const lowConf = result.recommendations.filter((r: any) => r.confidence === 'low');
+    
+    if (highConf.length > 0) {
+      output += `**🎯 High Match:**\n`;
+      for (const rec of highConf) {
+        output += `- **${rec.skill.name}** - ${rec.skill.description.slice(0, 80)}...\n`;
+        output += `  _${rec.match_reason}_\n`;
+      }
+      output += '\n';
+    }
+    
+    if (medConf.length > 0) {
+      output += `**👍 Good Match:**\n`;
+      for (const rec of medConf) {
+        output += `- **${rec.skill.name}** - ${rec.skill.description.slice(0, 80)}...\n`;
+        output += `  _${rec.match_reason}_\n`;
+      }
+      output += '\n';
+    }
+    
+    if (lowConf.length > 0) {
+      output += `**🔎 Possible Match:**\n`;
+      for (const rec of lowConf.slice(0, 3)) { // Limit low confidence
+        output += `- **${rec.skill.name}** - ${rec.skill.description.slice(0, 80)}...\n`;
+      }
+      output += '\n';
+    }
+  } else {
+    output += `### Recommendations\n`;
+    output += `No specific skill matches found for your stack. Use \`search_skills\` to browse available skills.\n\n`;
+  }
+  
+  // Next steps
+  output += `### Next Steps\n`;
+  for (const step of (result.next_steps || [])) {
+    output += `- ${step}\n`;
+  }
+  
+  return output;
+}
+
 // Format preview for display
 function formatPreview(preview: SyncPreview): string {
   let output = `## Skill Sync Preview\n\n`;
@@ -611,6 +893,14 @@ async function main(): Promise<void> {
       let result: unknown;
 
       switch (name) {
+        case 'setup':
+          const setupResult = await handleSetup((args || {}) as SetupParams);
+          result = {
+            formatted: formatSetupResult(setupResult),
+            ...setupResult
+          };
+          break;
+
         case 'sync_skills':
           const syncResponse = await handleSyncSkills((args || {}) as SyncSkillsParams & { skip_confirmation?: boolean });
           if (syncResponse.requires_confirmation && syncResponse.preview) {

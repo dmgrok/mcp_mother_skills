@@ -3,7 +3,7 @@ agent:
   mode: auto
   sync_both: false
 registry:
-  - url: https://cdn.jsdelivr.net/gh/dmgrok/agent_skills_directory@main/catalog.toon
+  - url: https://cdn.jsdelivr.net/gh/dmgrok/agent_skills_directory@main/catalog.json
     priority: 1
 cache:
   refresh_interval_days: 7

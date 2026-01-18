@@ -30,19 +30,20 @@
   "license": "MIT",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",
-    "yaml": "^2.3.4",
+    "@specfy/stack-analyser": "^1.27.4",
     "glob": "^10.3.10",
-    "ignore": "^5.3.0"
+    "ignore": "^5.3.0",
+    "yaml": "^2.3.4"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",
-    "@vitest/coverage-v8": "^4.0.17",
-    "typescript": "^5.3.0",
-    "tsx": "^4.7.0",
-    "vitest": "^4.0.17",
-    "eslint": "^8.55.0",
     "@typescript-eslint/eslint-plugin": "^6.13.0",
-    "@typescript-eslint/parser": "^6.13.0"
+    "@typescript-eslint/parser": "^6.13.0",
+    "@vitest/coverage-v8": "^4.0.17",
+    "eslint": "^8.55.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.0",
+    "vitest": "^4.0.17"
   },
   "engines": {
     "node": ">=18.0.0"

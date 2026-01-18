@@ -18,11 +18,16 @@
                 <span class="logo">🧠</span>
                 <span class="brand-name">Mother MCP</span>
             </div>
+            <button class="nav-toggle" aria-label="Toggle navigation">
+                <span class="hamburger"></span>
+            </button>
             <div class="nav-links">
                 <a href="#features">Features</a>
                 <a href="#agents">Agents</a>
                 <a href="#how-it-works">How It Works</a>
-                <a href="#skill-sources">Sources</a>
+                <a href="#detection">Detection</a>
+                <a href="#skill-sources">Skills</a>
+                <a href="#commands">Commands</a>
                 <a href="#setup">Setup</a>
                 <a href="https://github.com/dmgrok/mcp_mother_skills" class="btn btn-outline" target="_blank">
                     <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
@@ -34,15 +39,15 @@
         <div class="hero-content">
             <div class="hero-badge">Model Context Protocol Server</div>
             <h1>Stop Configuring AI Skills.<br>Start Building.</h1>
-            <p class="hero-subtitle">One command gives your AI assistant perfect context for your stack. No manual config. No context switching. Just <code>sync_skills</code> and code.</p>
+            <p class="hero-subtitle">One command gives your AI assistant perfect context for your stack. No manual config. No context switching. Just <code>setup</code> and code.</p>
             <div class="hero-stats">
                 <div class="stat">
-                    <div class="stat-value">5 sec</div>
-                    <div class="stat-label">Setup Time</div>
+                    <div class="stat-value">700+</div>
+                    <div class="stat-label">Technologies Detected</div>
                 </div>
                 <div class="stat">
-                    <div class="stat-value">30+ min</div>
-                    <div class="stat-label">Saved Per Project</div>
+                    <div class="stat-value">3-Tier</div>
+                    <div class="stat-label">Detection Strategy</div>
                 </div>
                 <div class="stat">
                     <div class="stat-value">3 Agents</div>
@@ -66,22 +71,25 @@
                 <div class="code-body">
                     <div class="code-line">
                         <span class="prompt">$</span>
-                        <span class="command">sync_skills</span>
+                        <span class="command">setup</span>
+                    </div>
+                    <div class="code-line output">
+                        <span class="info">🔍 Scanning:</span> package.json, tsconfig.json...
                     </div>
                     <div class="code-line output">
                         <span class="info">📦 Detected:</span> React, TypeScript, Next.js
                     </div>
                     <div class="code-line output">
-                        <span class="success">✓</span> Installed: frontend-design
+                        <span class="success">💡</span> Recommending: frontend-design
                     </div>
                     <div class="code-line output">
-                        <span class="success">✓</span> Installed: webapp-testing
+                        <span class="success">💡</span> Recommending: webapp-testing
                     </div>
                     <div class="code-line output">
-                        <span class="success">✓</span> Installed: mcp-builder
+                        <span class="success">💡</span> Recommending: mcp-builder
                     </div>
                     <div class="code-line output final">
-                        <span class="info">🎯</span> 3 skills synced for your project
+                        <span class="info">🎯</span> 3 skills recommended for your project
                     </div>
                 </div>
             </div>
@@ -408,23 +416,23 @@
                     <div class="step-number">1</div>
                     <div class="step-content">
                         <h3>Detect</h3>
-                        <p>Mother scans your project files to build a complete picture of your tech stack.</p>
+                        <p>Mother uses a <strong>3-tier detection strategy</strong> for comprehensive tech stack analysis.</p>
                         <div class="step-details">
                             <div class="detail-item">
-                                <code>package.json</code>
-                                <span>→ npm dependencies</span>
+                                <code>GitHub SBOM</code>
+                                <span>→ 340+ packages from dependency graph</span>
                             </div>
                             <div class="detail-item">
-                                <code>requirements.txt</code>
-                                <span>→ Python packages</span>
+                                <code>Specfy Analyser</code>
+                                <span>→ 700+ technologies, infrastructure, SaaS</span>
                             </div>
                             <div class="detail-item">
-                                <code>tsconfig.json</code>
-                                <span>→ TypeScript</span>
+                                <code>Local Scanning</code>
+                                <span>→ package.json, requirements.txt, configs</span>
                             </div>
                             <div class="detail-item">
-                                <code>Dockerfile</code>
-                                <span>→ Docker</span>
+                                <code>Git Remote</code>
+                                <span>→ Auto-detects GitHub repo from .git/config</span>
                             </div>
                         </div>
                     </div>
@@ -479,6 +487,73 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Enhanced Detection Section -->
+    <section id="detection" class="enhanced-detection">
+        <div class="container">
+            <div class="section-header">
+                <h2>Enhanced Detection</h2>
+                <p>3-tier strategy for comprehensive tech stack analysis.</p>
+            </div>
+            
+            <div class="detection-tiers">
+                <div class="tier-card tier-1">
+                    <div class="tier-badge">Tier 1</div>
+                    <h3>🔗 GitHub SBOM API</h3>
+                    <p><strong>Most Accurate</strong> — Fetches the Software Bill of Materials directly from GitHub's dependency graph.</p>
+                    <ul>
+                        <li>340+ packages from dependency graph</li>
+                        <li>Auto-detects repo from git remote URL</li>
+                        <li>PURL parsing for ecosystem detection</li>
+                        <li>Supports npm, pip, cargo, maven, go, nuget</li>
+                    </ul>
+                    <div class="tier-code">
+                        <code>GITHUB_TOKEN=ghp_xxx sync_skills</code>
+                    </div>
+                </div>
+                
+                <div class="tier-card tier-2">
+                    <div class="tier-badge">Tier 2</div>
+                    <h3>📊 Specfy Analyser</h3>
+                    <p><strong>Most Comprehensive</strong> — Detects 700+ technologies including infrastructure and SaaS.</p>
+                    <ul>
+                        <li>Languages, frameworks, databases</li>
+                        <li>Cloud services (AWS, GCP, Azure)</li>
+                        <li>CI/CD systems (GitHub Actions, CircleCI)</li>
+                        <li>Monitoring & analytics tools</li>
+                    </ul>
+                    <div class="tier-code">
+                        <code>Works offline with local analysis</code>
+                    </div>
+                </div>
+                
+                <div class="tier-card tier-3">
+                    <div class="tier-badge">Tier 3</div>
+                    <h3>📁 Local Fallback</h3>
+                    <p><strong>Always Available</strong> — Traditional file scanning for offline environments.</p>
+                    <ul>
+                        <li>package.json, requirements.txt</li>
+                        <li>Config files (tsconfig, Dockerfile)</li>
+                        <li>pyproject.toml, Cargo.toml, go.mod</li>
+                        <li>README.md keyword extraction</li>
+                    </ul>
+                    <div class="tier-code">
+                        <code>No external dependencies</code>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="git-detection">
+                <h3>🔍 Automatic Git Remote Detection</h3>
+                <p>Mother automatically detects your GitHub repository from local git configuration:</p>
+                <div class="url-formats">
+                    <code>git@github.com:owner/repo.git</code>
+                    <code>https://github.com/owner/repo.git</code>
+                    <code>ssh://git@github.com/owner/repo</code>
                 </div>
             </div>
         </div>
@@ -897,19 +972,99 @@ npm run build</code></pre>
                 </div>
                 
                 <div class="setup-step">
-                    <h3>3. Use It</h3>
-                    <p>Start a conversation and run:</p>
-                    <div class="code-block simple">
-                        <pre><code>sync_skills</code></pre>
+                    <h3>3. Add Project Instructions</h3>
+                    <p>Add these instructions to your project so Mother MCP auto-initializes at the start of each session.</p>
+                    
+                    <div class="config-tabs">
+                        <button class="tab-btn active" data-tab="copilot-inst">GitHub Copilot</button>
+                        <button class="tab-btn" data-tab="claude-inst">Claude Code</button>
+                        <button class="tab-btn" data-tab="codex-inst">OpenAI Codex</button>
+                        <button class="tab-btn" data-tab="cursor-inst">Cursor</button>
                     </div>
-                    <p>That's it! Mother will detect your project and install relevant skills.</p>
+                    
+                    <div class="tab-content active" id="copilot-inst-config">
+                        <p>Add to <code>.github/copilot-instructions.md</code>:</p>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">markdown</span>
+                                <button class="copy-btn" data-code="## Startup
+
+At the start of each conversation, call `setup` (for first-time use) or `sync_skills` (for ongoing updates) to ensure project-relevant skills are loaded.">Copy</button>
+                            </div>
+                            <pre><code>## Startup
+
+At the start of each conversation, call `setup` (for first-time use) 
+or `sync_skills` (for ongoing updates) to ensure project-relevant 
+skills are loaded.</code></pre>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="claude-inst-config">
+                        <p>Add to <code>CLAUDE.md</code> in your project root:</p>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">markdown</span>
+                                <button class="copy-btn" data-code="## Startup
+
+At the start of each conversation, call `setup` (for first-time use) or `sync_skills` (for ongoing updates) to ensure project-relevant skills are loaded.">Copy</button>
+                            </div>
+                            <pre><code>## Startup
+
+At the start of each conversation, call `setup` (for first-time use) 
+or `sync_skills` (for ongoing updates) to ensure project-relevant 
+skills are loaded.</code></pre>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="codex-inst-config">
+                        <p>Add to <code>AGENTS.md</code> in your project root:</p>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">markdown</span>
+                                <button class="copy-btn" data-code="## Startup
+
+At the start of each conversation, call `setup` (for first-time use) or `sync_skills` (for ongoing updates) to ensure project-relevant skills are loaded.">Copy</button>
+                            </div>
+                            <pre><code>## Startup
+
+At the start of each conversation, call `setup` (for first-time use) 
+or `sync_skills` (for ongoing updates) to ensure project-relevant 
+skills are loaded.</code></pre>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="cursor-inst-config">
+                        <p>Add to <code>.cursorrules</code> in your project root:</p>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">markdown</span>
+                                <button class="copy-btn" data-code="## Startup
+
+At the start of each conversation, call `setup` (for first-time use) or `sync_skills` (for ongoing updates) to ensure project-relevant skills are loaded.">Copy</button>
+                            </div>
+                            <pre><code>## Startup
+
+At the start of each conversation, call `setup` (for first-time use) 
+or `sync_skills` (for ongoing updates) to ensure project-relevant 
+skills are loaded.</code></pre>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="setup-step">
+                    <h3>4. Use It</h3>
+                    <p>Start a conversation and say:</p>
+                    <div class="code-block simple">
+                        <pre><code>Setup my Mother MCP</code></pre>
+                    </div>
+                    <p>That's it! Mother will detect your project, show recommendations, and let you install matching skills.</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Commands Section -->
-    <section class="commands">
+    <section id="commands" class="commands">
         <div class="container">
             <div class="section-header">
                 <h2>Available Commands</h2>
@@ -918,8 +1073,13 @@ npm run build</code></pre>
             
             <div class="commands-grid">
                 <div class="command-card primary">
+                    <code class="command-name">setup</code>
+                    <p><strong>Start here!</strong> Initialize Mother MCP, scan your project, and get skill recommendations.</p>
+                </div>
+
+                <div class="command-card primary">
                     <code class="command-name">sync_skills</code>
-                    <p>Detect project tech stack and install matching skills. <strong>Run this at the start of each session.</strong></p>
+                    <p>Synchronize skills based on detected technologies. Run this to keep skills up to date.</p>
                 </div>
                 
                 <div class="command-card">

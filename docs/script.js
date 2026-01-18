@@ -1,19 +1,55 @@
 // Tab switching for configuration examples
 document.addEventListener('DOMContentLoaded', function() {
-    const tabBtns = document.querySelectorAll('.tab-btn');
-    const tabContents = document.querySelectorAll('.tab-content');
+    // Mobile navigation toggle
+    const navToggle = document.querySelector('.nav-toggle');
+    const navLinks = document.querySelector('.nav-links');
+    
+    if (navToggle && navLinks) {
+        navToggle.addEventListener('click', () => {
+            navToggle.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        });
+        
+        // Close mobile menu when clicking a link
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navToggle.classList.remove('active');
+                navLinks.classList.remove('active');
+            });
+        });
+        
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!navToggle.contains(e.target) && !navLinks.contains(e.target)) {
+                navToggle.classList.remove('active');
+                navLinks.classList.remove('active');
+            }
+        });
+    }
 
-    tabBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const tabId = btn.dataset.tab;
-            
-            // Remove active class from all buttons and contents
-            tabBtns.forEach(b => b.classList.remove('active'));
-            tabContents.forEach(c => c.classList.remove('active'));
-            
-            // Add active class to clicked button and corresponding content
-            btn.classList.add('active');
-            document.getElementById(`${tabId}-config`).classList.add('active');
+    // Handle tabs within their parent container
+    const tabContainers = document.querySelectorAll('.config-tabs');
+    
+    tabContainers.forEach(container => {
+        const tabBtns = container.querySelectorAll('.tab-btn');
+        const parentStep = container.closest('.setup-step');
+        const tabContents = parentStep.querySelectorAll('.tab-content');
+        
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.dataset.tab;
+                
+                // Remove active class from buttons and contents within this container
+                tabBtns.forEach(b => b.classList.remove('active'));
+                tabContents.forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked button and corresponding content
+                btn.classList.add('active');
+                const targetContent = parentStep.querySelector(`#${tabId}-config`);
+                if (targetContent) {
+                    targetContent.classList.add('active');
+                }
+            });
         });
     });
 

@@ -16,7 +16,10 @@ A Model Context Protocol (MCP) server that dynamically provisions agent skills b
 
 Mother MCP automatically:
 
-1. **Detects** your project's tech stack by scanning `package.json`, `requirements.txt`, config files, and README
+1. **Detects** your project's tech stack using a 3-tier strategy:
+   - **GitHub SBOM API** for accurate dependency data (340+ packages)
+   - **Specfy analyser** for 700+ technologies including infrastructure & SaaS
+   - **Local scanning** as offline fallback
 2. **Matches** detected technologies to available skills from trusted registries
 3. **Downloads** relevant skills to the appropriate location (`.github/skills`, `.claude/skills`, or `.codex/skills`)
 4. **Adapts** to whichever AI agent you're using (Claude, Copilot, or Codex)
@@ -93,7 +96,21 @@ Add to your VS Code settings or `.vscode/mcp.json`:
 
 ## Usage
 
-### Sync Skills (Primary Command)
+### Setup (First-Time Onboarding)
+
+When first using Mother MCP, call `setup` to get started:
+
+```
+Setup my Mother MCP
+```
+
+This will:
+- Scan your project to detect technologies (languages, frameworks, databases, tools)
+- Fetch the skill registry and find matching skills
+- Show recommended skills with match explanations
+- Let you choose which skills to install
+
+### Sync Skills (Ongoing Updates)
 
 Call `sync_skills` at the start of each conversation:
 
@@ -110,6 +127,8 @@ This will:
 
 | Command | Description |
 |---------|-------------|
+| `setup` | **Start here!** Initialize Mother MCP and get skill recommendations |
+| `sync_skills` | Synchronize skills based on detected technologies |
 | `get_project_context` | View detected stack and installed skills |
 | `get_agent_info` | See which agent is detected (Claude/Copilot/Codex) |
 | `search_skills` | Search for available skills |
@@ -180,15 +199,40 @@ The catalog is refreshed automatically. See [catalog.json](https://cdn.jsdelivr.
 
 ## How Skills Are Matched
 
-Mother MCP detects technologies using:
+Mother MCP uses a **tiered detection strategy** for comprehensive tech stack analysis:
+
+### Tier 1: GitHub SBOM API (Most Accurate)
+When connected to a GitHub repository, Mother fetches the Software Bill of Materials directly from GitHub's dependency graph:
+- Automatic repo detection from local `.git/config` remote URL
+- Parses SPDX-formatted dependency data with 340+ packages
+- PURL parsing for ecosystem detection (npm, pip, cargo, maven, etc.)
+- Requires `GITHUB_TOKEN` environment variable
+
+### Tier 2: Specfy Stack Analyser
+Comprehensive detection of 700+ technologies:
+- Languages, frameworks, databases, infrastructure
+- SaaS tools, cloud services, CI/CD systems
+- Works offline with local file analysis
+
+### Tier 3: Local Detection (Fallback)
+Traditional file scanning for offline environments:
 
 | Source | What It Detects |
-|--------|-----------------|
+|--------|------------------|
 | `package.json` | npm dependencies (react, next, typescript, etc.) |
 | `requirements.txt` | Python packages (fastapi, django, etc.) |
 | `pyproject.toml` | Python project dependencies |
 | Config files | tsconfig.json → TypeScript, Dockerfile → Docker, etc. |
 | README.md | Technology mentions with lower confidence |
+
+### Git Remote Auto-Detection
+Mother automatically detects your GitHub repository from local git configuration:
+```bash
+# Supported URL formats:
+git@github.com:owner/repo.git      # SSH
+https://github.com/owner/repo.git  # HTTPS
+ssh://git@github.com/owner/repo    # SSH URL
+```
 
 ## Skill Locations
 

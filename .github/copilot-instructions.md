@@ -2,7 +2,7 @@
 
 ## Startup
 
-At the start of each conversation, call `sync_skills` to ensure project-relevant skills are loaded.
+At the start of each conversation, call `setup` (for first-time use) or `sync_skills` (for ongoing updates) to ensure project-relevant skills are loaded.
 
 ## Project Overview
 
@@ -11,18 +11,20 @@ This is an **MCP (Model Context Protocol) server** that dynamically provisions A
 ### Core Architecture
 
 ```
-index.ts          → MCP server entry, tool definitions, request routing
-├── agent-detector.ts    → Detects Claude vs Copilot (env vars, client info, project structure)
-├── project-detector.ts  → Scans files to detect tech stack (packages, configs, README)
-├── registry-client.ts   → Fetches skills from GitHub registries with caching
-├── skill-installer.ts   → Downloads/installs skills to agent-specific paths
-├── config-manager.ts    → YAML config handling (.mcp/mother/)
-├── agent-profiles.ts    → Agent path configurations (claude → .claude/, copilot → .github/)
-└── types.ts             → All shared TypeScript interfaces
+index.ts               → MCP server entry, tool definitions, request routing
+├── agent-detector.ts       → Detects Claude vs Copilot (env vars, client info, project structure)
+├── project-detector.ts     → Scans files to detect tech stack (packages, configs, README)
+├── enhanced-detector.ts    → Tiered detection: GitHub SBOM → Specfy → Local fallback
+├── github-sbom-client.ts   → GitHub SBOM API client with PURL parsing
+├── registry-client.ts      → Fetches skills from GitHub registries with caching
+├── skill-installer.ts      → Downloads/installs skills to agent-specific paths
+├── config-manager.ts       → YAML config handling (.mcp/mother/)
+├── agent-profiles.ts       → Agent path configurations (claude → .claude/, copilot → .github/)
+└── types.ts                → All shared TypeScript interfaces
 ```
 
 ### Data Flow
-1. `sync_skills` tool called → `ProjectDetector` scans for packages/files → matches against `RegistryClient` skills → `SkillInstaller` downloads to `.github/skills` or `.claude/skills`
+1. `sync_skills` tool called → `EnhancedProjectDetector` uses 3-tier detection (GitHub SBOM → Specfy → Local) → matches against `RegistryClient` skills → `SkillInstaller` downloads to `.github/skills` or `.claude/skills`
 
 ## Development Commands
 
@@ -103,3 +105,5 @@ dependencies: [other-skill]
 ---
 # Skill instructions in markdown...
 ```
+
+Whenever tehre is a new feature update the readme, changelog and static docs webpage

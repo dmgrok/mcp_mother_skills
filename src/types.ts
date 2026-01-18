@@ -197,3 +197,43 @@ export interface ConfirmSyncParams {
   approved_skills?: string[];
   rejected_skills?: string[];
 }
+
+// GitHub SBOM types
+export interface GitHubConfig {
+  token?: string;
+  owner?: string;
+  repo?: string;
+}
+
+export interface SBOMPackage {
+  name: string;
+  version?: string;
+  ecosystem: string;
+  license?: string;
+  relationship?: 'direct' | 'transitive';
+  purl?: string;
+}
+
+export interface SBOMResult {
+  packages: SBOMPackage[];
+  source: 'github-sbom';
+  fetchedAt: string;
+}
+
+// Enhanced detection config
+export interface EnhancedDetectionConfig {
+  useGitHubSBOM: boolean;
+  useSpecfy: boolean;
+  useLocalFallback: boolean;
+  github?: GitHubConfig;
+}
+
+// Detection source tracking
+export type DetectionSource = 'github-sbom' | 'specfy' | 'local';
+
+export interface EnhancedDetectionResult {
+  stack: DetectedStack;
+  sources: DetectionSource[];
+  packages?: SBOMPackage[];
+  rawSpecfy?: unknown;
+}
