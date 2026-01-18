@@ -7,7 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-01-18
+
 ### Added
+
+#### Publishing & Distribution
 - npm package configuration for public registry deployment
 - `.npmignore` file to exclude development files from published package
 - `prepublishOnly` script for automated pre-publish validation
@@ -18,17 +22,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Workflow triggers on GitHub release publication
 - Automated testing, building, and publishing pipeline
 - npm provenance attestation for package integrity
-
-### Changed
-- Updated installation instructions to use `npm install` and `npx`
-- Configuration examples now use `npx mcp-mother-skills` instead of local paths
-- Enhanced package.json with repository, homepage, bugs URLs
-- Expanded keywords for better npm discoverability
-- Updated PUBLISHING.md with automated and manual publishing workflows
-
-## [0.1.1] - 2026-01-18
-
-### Added
 
 #### New `setup` Tool - First-Time Onboarding
 - **Start here!** New `setup` tool for first-time Mother MCP initialization
@@ -48,6 +41,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Next steps guidance
 
 ### Changed
+- Updated installation instructions to use `npm install` and `npx`
+- Configuration examples now use `npx mcp-mother-skills` instead of local paths
+- Enhanced package.json with repository, homepage, bugs URLs
+- Expanded keywords for better npm discoverability
+- Updated PUBLISHING.md with automated and manual publishing workflows
 - Registry format now uses JSON (`catalog.json`) instead of TOON format
 - Tool descriptions improved for better AI agent understanding
 
