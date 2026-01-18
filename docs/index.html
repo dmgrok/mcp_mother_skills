@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mother MCP Skills - Dynamic AI Agent Skill Provisioning</title>
+    <meta name="description" content="Automatically provision the right AI skills for your project. Works with Claude, GitHub Copilot, and OpenAI Codex.">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Hero Section -->
+    <header class="hero">
+        <nav class="nav">
+            <div class="nav-brand">
+                <span class="logo">🧠</span>
+                <span class="brand-name">Mother MCP</span>
+            </div>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#agents">Agents</a>
+                <a href="#how-it-works">How It Works</a>
+                <a href="#skill-sources">Sources</a>
+                <a href="#setup">Setup</a>
+                <a href="https://github.com/dmgrok/mcp_mother_skills" class="btn btn-outline" target="_blank">
+                    <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    GitHub
+                </a>
+            </div>
+        </nav>
+        
+        <div class="hero-content">
+            <div class="hero-badge">Model Context Protocol Server</div>
+            <h1>Dynamic AI Skills<br>for Every Project</h1>
+            <p class="hero-subtitle">Mother MCP automatically detects your tech stack and provisions the right skills for Claude, GitHub Copilot, and OpenAI Codex.</p>
+            <div class="hero-actions">
+                <a href="#setup" class="btn btn-primary btn-lg">Get Started</a>
+                <a href="#how-it-works" class="btn btn-secondary btn-lg">Learn More</a>
+            </div>
+        </div>
+        
+        <div class="hero-visual">
+            <div class="code-window">
+                <div class="code-header">
+                    <span class="dot red"></span>
+                    <span class="dot yellow"></span>
+                    <span class="dot green"></span>
+                    <span class="code-title">Terminal</span>
+                </div>
+                <div class="code-body">
+                    <div class="code-line">
+                        <span class="prompt">$</span>
+                        <span class="command">sync_skills</span>
+                    </div>
+                    <div class="code-line output">
+                        <span class="info">📦 Detected:</span> React, TypeScript, Next.js
+                    </div>
+                    <div class="code-line output">
+                        <span class="success">✓</span> Installed: frontend-design
+                    </div>
+                    <div class="code-line output">
+                        <span class="success">✓</span> Installed: webapp-testing
+                    </div>
+                    <div class="code-line output">
+                        <span class="success">✓</span> Installed: mcp-builder
+                    </div>
+                    <div class="code-line output final">
+                        <span class="info">🎯</span> 3 skills synced for your project
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Why Mother MCP?</h2>
+                <p>Stop manually configuring AI assistants. Let Mother handle it automatically.</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🔍</div>
+                    <h3>Smart Detection</h3>
+                    <p>Automatically scans package.json, requirements.txt, config files, and README to understand your tech stack.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Precise Matching</h3>
+                    <p>Matches detected technologies to skills from trusted registries including Anthropic, OpenAI, and GitHub.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <h3>Multi-Agent Support</h3>
+                    <p>Works seamlessly with Claude Code, GitHub Copilot, and OpenAI Codex. Automatically adapts to your agent.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>One Command</h3>
+                    <p>Just call <code>sync_skills</code> at the start of each session. Mother handles the rest.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📦</div>
+                    <h3>Registry Sync</h3>
+                    <p>Fetches skills from the Agent Skills Directory with automatic caching and updates.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🔧</div>
+                    <h3>Full Control</h3>
+                    <p>Configure always-include or always-exclude lists. Your preferences are always respected.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Agents Section -->
+    <section id="agents" class="agents">
+        <div class="container">
+            <div class="section-header">
+                <h2>Supported AI Agents</h2>
+                <p>One server, all your favorite AI coding assistants.</p>
+            </div>
+            
+            <div class="agents-grid">
+                <div class="agent-card">
+                    <div class="agent-logo">
+                        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="50" cy="50" r="45" fill="#D97706"/>
+                            <path d="M30 40 L50 60 L70 40" stroke="white" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3>Claude Code</h3>
+                    <p>Full support with auto-detection via environment variables and MCP client info.</p>
+                    <div class="agent-badge">✅ Full Support</div>
+                </div>
+                
+                <div class="agent-card">
+                    <div class="agent-logo">
+                        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="50" cy="50" r="45" fill="#6366F1"/>
+                            <circle cx="50" cy="50" r="20" fill="white"/>
+                            <circle cx="50" cy="50" r="8" fill="#6366F1"/>
+                        </svg>
+                    </div>
+                    <h3>GitHub Copilot</h3>
+                    <p>Seamless VS Code integration. Skills installed to .github/skills automatically.</p>
+                    <div class="agent-badge">✅ Full Support</div>
+                </div>
+                
+                <div class="agent-card">
+                    <div class="agent-logo">
+                        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="50" cy="50" r="45" fill="#10B981"/>
+                            <rect x="30" y="35" width="40" height="30" rx="5" fill="white"/>
+                            <circle cx="40" cy="50" r="4" fill="#10B981"/>
+                            <circle cx="60" cy="50" r="4" fill="#10B981"/>
+                        </svg>
+                    </div>
+                    <h3>OpenAI Codex</h3>
+                    <p>Follows the Open Agent Skills Standard. Compatible with AGENTS.md workflow.</p>
+                    <div class="agent-badge">✅ Full Support</div>
+                </div>
+            </div>
+            
+            <div class="detection-table">
+                <h3>Agent Detection Priority</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Priority</th>
+                            <th>Method</th>
+                            <th>Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="priority">1</span></td>
+                            <td>Config Override</td>
+                            <td><code>agent.force: claude</code></td>
+                        </tr>
+                        <tr>
+                            <td><span class="priority">2</span></td>
+                            <td>Environment Variables</td>
+                            <td><code>CLAUDE_CODE=1</code>, <code>GITHUB_COPILOT</code>, <code>CODEX_HOME</code></td>
+                        </tr>
+                        <tr>
+                            <td><span class="priority">3</span></td>
+                            <td>MCP Client Info</td>
+                            <td>Client name contains "claude", "copilot", or "codex"</td>
+                        </tr>
+                        <tr>
+                            <td><span class="priority">4</span></td>
+                            <td>Project Structure</td>
+                            <td><code>.claude/</code>, <code>.github/copilot-instructions.md</code>, <code>AGENTS.md</code></td>
+                        </tr>
+                        <tr>
+                            <td><span class="priority">5</span></td>
+                            <td>Home Directory</td>
+                            <td><code>~/.claude/skills/</code>, <code>~/.copilot/skills/</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <h2>How It Works</h2>
+                <p>From detection to installation in seconds.</p>
+            </div>
+            
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Detect</h3>
+                        <p>Mother scans your project files to build a complete picture of your tech stack.</p>
+                        <div class="step-details">
+                            <div class="detail-item">
+                                <code>package.json</code>
+                                <span>→ npm dependencies</span>
+                            </div>
+                            <div class="detail-item">
+                                <code>requirements.txt</code>
+                                <span>→ Python packages</span>
+                            </div>
+                            <div class="detail-item">
+                                <code>tsconfig.json</code>
+                                <span>→ TypeScript</span>
+                            </div>
+                            <div class="detail-item">
+                                <code>Dockerfile</code>
+                                <span>→ Docker</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step-arrow">→</div>
+                
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Match</h3>
+                        <p>Compares detected technologies against the skill registry to find relevant skills.</p>
+                        <div class="step-details">
+                            <div class="skill-match">
+                                <span class="tech">React</span>
+                                <span class="arrow">→</span>
+                                <span class="skill">frontend-design</span>
+                            </div>
+                            <div class="skill-match">
+                                <span class="tech">Next.js</span>
+                                <span class="arrow">→</span>
+                                <span class="skill">webapp-testing</span>
+                            </div>
+                            <div class="skill-match">
+                                <span class="tech">MCP</span>
+                                <span class="arrow">→</span>
+                                <span class="skill">mcp-builder</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step-arrow">→</div>
+                
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Install</h3>
+                        <p>Downloads skills to the appropriate directory for your AI agent.</p>
+                        <div class="step-details">
+                            <div class="install-path">
+                                <span class="agent-name">Claude</span>
+                                <code>.claude/skills/</code>
+                            </div>
+                            <div class="install-path">
+                                <span class="agent-name">Copilot</span>
+                                <code>.github/skills/</code>
+                            </div>
+                            <div class="install-path">
+                                <span class="agent-name">Codex</span>
+                                <code>.codex/skills/</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section class="skills-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Available Skills</h2>
+                <p>Curated from Anthropic, OpenAI, GitHub, and the community.</p>
+            </div>
+            
+            <div class="skills-categories">
+                <div class="skill-category">
+                    <h3>📄 Documents & Data</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">pdf</span>
+                        <span class="skill-tag">docx</span>
+                        <span class="skill-tag">pptx</span>
+                        <span class="skill-tag">xlsx</span>
+                        <span class="skill-tag">doc-coauthoring</span>
+                    </div>
+                </div>
+                
+                <div class="skill-category">
+                    <h3>🎨 Creative & Design</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">frontend-design</span>
+                        <span class="skill-tag">canvas-design</span>
+                        <span class="skill-tag">theme-factory</span>
+                        <span class="skill-tag">brand-guidelines</span>
+                        <span class="skill-tag">algorithmic-art</span>
+                        <span class="skill-tag">web-artifacts-builder</span>
+                    </div>
+                </div>
+                
+                <div class="skill-category">
+                    <h3>💻 Development</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">mcp-builder</span>
+                        <span class="skill-tag">skill-creator</span>
+                        <span class="skill-tag">webapp-testing</span>
+                        <span class="skill-tag">create-plan</span>
+                        <span class="skill-tag">gh-fix-ci</span>
+                        <span class="skill-tag">gh-address-comments</span>
+                    </div>
+                </div>
+                
+                <div class="skill-category">
+                    <h3>🏢 Enterprise</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">linear</span>
+                        <span class="skill-tag">slack-gif-creator</span>
+                        <span class="skill-tag">notion-spec-to-implementation</span>
+                        <span class="skill-tag">notion-meeting-intelligence</span>
+                        <span class="skill-tag">azure-role-selector</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="registry-note">
+                <p>Skills are fetched from the <a href="https://github.com/dmgrok/agent_skills_directory" target="_blank">Agent Skills Directory</a>, an automatically updated catalog.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skill Sources Section -->
+    <section id="skill-sources" class="skill-sources">
+        <div class="container">
+            <div class="section-header">
+                <h2>Skill Sources</h2>
+                <p>Curated from the best AI agent skill repositories.</p>
+            </div>
+            
+            <div class="sources-grid">
+                <a href="https://github.com/anthropics/courses/tree/master/prompt_engineering_interactive_tutorial/Anthropic%201P/07_Using_Tools_(Function_Calling)" class="source-card" target="_blank">
+                    <div class="source-logo anthropic">
+                        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="50" cy="50" r="45" fill="#D97706"/>
+                            <path d="M35 65 L50 35 L65 65 M40 55 L60 55" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="source-info">
+                        <h3>Anthropic Skills</h3>
+                        <p>Official Claude skills for documents, design, and enterprise workflows</p>
+                        <span class="source-count">16 skills</span>
+                    </div>
+                    <span class="source-arrow">→</span>
+                </a>
+                
+                <a href="https://github.com/openai/codex" class="source-card" target="_blank">
+                    <div class="source-logo openai">
+                        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="50" cy="50" r="45" fill="#10B981"/>
+                            <circle cx="50" cy="50" r="25" stroke="white" stroke-width="5" fill="none"/>
+                            <circle cx="50" cy="25" r="5" fill="white"/>
+                        </svg>
+                    </div>
+                    <div class="source-info">
+                        <h3>OpenAI Codex</h3>
+                        <p>Official skills following the Open Agent Skills Standard</p>
+                        <span class="source-count">10 skills</span>
+                    </div>
+                    <span class="source-arrow">→</span>
+                </a>
+                
+                <a href="https://github.com/github/copilot-docs" class="source-card" target="_blank">
+                    <div class="source-logo github">
+                        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="50" cy="50" r="45" fill="#6366F1"/>
+                            <path d="M50 20c-16.569 0-30 13.431-30 30 0 13.255 8.594 24.497 20.5 28.467 1.5.276 2.047-.651 2.047-1.447 0-.714-.026-2.608-.04-5.12-8.342 1.813-10.102-4.02-10.102-4.02-1.364-3.467-3.33-4.388-3.33-4.388-2.722-1.86.206-1.822.206-1.822 3.01.212 4.595 3.09 4.595 3.09 2.675 4.583 7.018 3.259 8.73 2.492.272-1.937 1.046-3.259 1.902-4.008-6.66-.758-13.66-3.33-13.66-14.823 0-3.275 1.17-5.953 3.09-8.053-.31-.757-1.34-3.808.293-7.94 0 0 2.52-.807 8.25 3.077a28.663 28.663 0 0 1 7.5-1.01c2.545.012 5.11.344 7.5 1.01 5.73-3.884 8.247-3.077 8.247-3.077 1.636 4.132.606 7.183.296 7.94 1.923 2.1 3.087 4.778 3.087 8.053 0 11.52-7.01 14.058-13.688 14.8 1.076.928 2.036 2.762 2.036 5.567 0 4.017-.036 7.257-.036 8.243 0 .803.54 1.738 2.063 1.444C71.413 74.49 80 63.252 80 50c0-16.569-13.431-30-30-30z" fill="white"/>
+                        </svg>
+                    </div>
+                    <div class="source-info">
+                        <h3>GitHub Copilot</h3>
+                        <p>GitHub workflow skills for CI/CD, PR reviews, and automation</p>
+                        <span class="source-count">3 skills</span>
+                    </div>
+                    <span class="source-arrow">→</span>
+                </a>
+                
+                <a href="https://github.com/dmgrok/agent_skills_directory" class="source-card featured" target="_blank">
+                    <div class="source-logo directory">
+                        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="50" cy="50" r="45" fill="#7c5cff"/>
+                            <rect x="25" y="35" width="50" height="35" rx="4" stroke="white" stroke-width="4" fill="none"/>
+                            <path d="M25 42 L42 42 L47 35 L75 35" stroke="white" stroke-width="4" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <div class="source-info">
+                        <h3>Agent Skills Directory</h3>
+                        <p>Aggregated catalog auto-updated from all providers</p>
+                        <span class="source-count">29+ skills</span>
+                    </div>
+                    <span class="source-arrow">→</span>
+                </a>
+            </div>
+            
+            <div class="community-repos">
+                <h3>Community Repositories</h3>
+                <div class="repo-grid">
+                    <a href="https://github.com/modelcontextprotocol/servers" class="repo-card" target="_blank">
+                        <span class="repo-icon">📦</span>
+                        <div class="repo-info">
+                            <span class="repo-name">modelcontextprotocol/servers</span>
+                            <span class="repo-desc">Official MCP server implementations</span>
+                        </div>
+                    </a>
+                    <a href="https://github.com/wong2/awesome-mcp-servers" class="repo-card" target="_blank">
+                        <span class="repo-icon">⭐</span>
+                        <div class="repo-info">
+                            <span class="repo-name">wong2/awesome-mcp-servers</span>
+                            <span class="repo-desc">Curated list of MCP servers</span>
+                        </div>
+                    </a>
+                    <a href="https://github.com/punkpeye/awesome-mcp-servers" class="repo-card" target="_blank">
+                        <span class="repo-icon">🚀</span>
+                        <div class="repo-info">
+                            <span class="repo-name">punkpeye/awesome-mcp-servers</span>
+                            <span class="repo-desc">Community MCP server collection</span>
+                        </div>
+                    </a>
+                    <a href="https://agentskills.io" class="repo-card" target="_blank">
+                        <span class="repo-icon">🌐</span>
+                        <div class="repo-info">
+                            <span class="repo-name">agentskills.io</span>
+                            <span class="repo-desc">Open Agent Skills Standard</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Auto vs Manual Section -->
+    <section id="skill-management" class="skill-management">
+        <div class="container">
+            <div class="section-header">
+                <h2>Automatic & Manual Skills</h2>
+                <p>Let Mother detect skills automatically, or take full control.</p>
+            </div>
+            
+            <div class="management-modes">
+                <div class="mode-card auto">
+                    <div class="mode-header">
+                        <span class="mode-icon">🤖</span>
+                        <h3>Automatic Detection</h3>
+                        <span class="mode-badge recommended">Recommended</span>
+                    </div>
+                    <p>Mother scans your project and installs matching skills automatically.</p>
+                    
+                    <div class="mode-example">
+                        <div class="detection-flow">
+                            <div class="detection-input">
+                                <span class="file-icon">📄</span>
+                                <code>package.json</code>
+                            </div>
+                            <div class="detection-arrow">→</div>
+                            <div class="detection-found">
+                                <span class="found-tech">react</span>
+                                <span class="found-tech">next</span>
+                                <span class="found-tech">typescript</span>
+                            </div>
+                            <div class="detection-arrow">→</div>
+                            <div class="detection-skills">
+                                <span class="installed-skill">✓ frontend-design</span>
+                                <span class="installed-skill">✓ webapp-testing</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mode-command">
+                        <code>sync_skills</code>
+                        <span class="command-desc">Run at start of each session</span>
+                    </div>
+                    
+                    <h4>Detection Sources</h4>
+                    <ul class="detection-sources">
+                        <li><code>package.json</code> — npm dependencies</li>
+                        <li><code>requirements.txt</code> — Python packages</li>
+                        <li><code>pyproject.toml</code> — Python projects</li>
+                        <li><code>Cargo.toml</code> — Rust crates</li>
+                        <li><code>go.mod</code> — Go modules</li>
+                        <li><code>*.config.js</code> — Framework configs</li>
+                        <li><code>Dockerfile</code> — Docker projects</li>
+                        <li><code>README.md</code> — Keyword extraction</li>
+                    </ul>
+                </div>
+                
+                <div class="mode-card manual">
+                    <div class="mode-header">
+                        <span class="mode-icon">🎯</span>
+                        <h3>Manual Installation</h3>
+                        <span class="mode-badge">Full Control</span>
+                    </div>
+                    <p>Search and install specific skills by name when you need them.</p>
+                    
+                    <div class="mode-example">
+                        <div class="manual-flow">
+                            <div class="manual-step">
+                                <span class="step-label">Search</span>
+                                <code>search_skills "design"</code>
+                            </div>
+                            <div class="manual-results">
+                                <span class="result-item">frontend-design</span>
+                                <span class="result-item">canvas-design</span>
+                                <span class="result-item">brand-guidelines</span>
+                            </div>
+                            <div class="manual-step">
+                                <span class="step-label">Install</span>
+                                <code>install_skill "canvas-design"</code>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mode-commands">
+                        <div class="cmd-row">
+                            <code>search_skills "query"</code>
+                            <span>Find skills by name or keyword</span>
+                        </div>
+                        <div class="cmd-row">
+                            <code>install_skill "name"</code>
+                            <span>Install a specific skill</span>
+                        </div>
+                        <div class="cmd-row">
+                            <code>uninstall_skill "name"</code>
+                            <span>Remove an installed skill</span>
+                        </div>
+                    </div>
+                    
+                    <h4>Always Include/Exclude</h4>
+                    <div class="config-example">
+                        <p>Configure in <code>.mcp/mother/config.yaml</code>:</p>
+                        <div class="code-block small">
+                            <pre><code>skills:
+  always_include:
+    - mcp-builder
+    - skill-creator
+  always_exclude:
+    - deprecated-skill</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Setup Section -->
+    <section id="setup" class="setup">
+        <div class="container">
+            <div class="section-header">
+                <h2>Quick Setup</h2>
+                <p>Get Mother MCP running in under 5 minutes.</p>
+            </div>
+            
+            <div class="setup-steps">
+                <div class="setup-step">
+                    <h3>1. Install</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">bash</span>
+                            <button class="copy-btn" data-code="git clone https://github.com/dmgrok/mcp_mother_skills.git
+cd mcp_mother_skills
+npm install
+npm run build">Copy</button>
+                        </div>
+                        <pre><code>git clone https://github.com/dmgrok/mcp_mother_skills.git
+cd mcp_mother_skills
+npm install
+npm run build</code></pre>
+                    </div>
+                </div>
+                
+                <div class="setup-step">
+                    <h3>2. Configure Your Agent</h3>
+                    
+                    <div class="config-tabs">
+                        <button class="tab-btn active" data-tab="claude">Claude Code</button>
+                        <button class="tab-btn" data-tab="copilot">GitHub Copilot</button>
+                        <button class="tab-btn" data-tab="desktop">Claude Desktop</button>
+                    </div>
+                    
+                    <div class="tab-content active" id="claude-config">
+                        <p>Add to your project's <code>.mcp.json</code>:</p>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">json</span>
+                                <button class="copy-btn" data-code='{
+  "mcpServers": {
+    "mother-skills": {
+      "command": "node",
+      "args": ["/path/to/mcp_mother_skills/dist/index.js"],
+      "env": {
+        "MOTHER_PROJECT_PATH": "."
+      }
+    }
+  }
+}'>Copy</button>
+                            </div>
+                            <pre><code>{
+  "mcpServers": {
+    "mother-skills": {
+      "command": "node",
+      "args": ["/path/to/mcp_mother_skills/dist/index.js"],
+      "env": {
+        "MOTHER_PROJECT_PATH": "."
+      }
+    }
+  }
+}</code></pre>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="copilot-config">
+                        <p>Add to your <code>.vscode/mcp.json</code>:</p>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">json</span>
+                                <button class="copy-btn" data-code='{
+  "mcp.servers": {
+    "mother-skills": {
+      "command": "node",
+      "args": ["${workspaceFolder}/path/to/mcp_mother_skills/dist/index.js"],
+      "env": {
+        "MOTHER_PROJECT_PATH": "${workspaceFolder}"
+      }
+    }
+  }
+}'>Copy</button>
+                            </div>
+                            <pre><code>{
+  "mcp.servers": {
+    "mother-skills": {
+      "command": "node",
+      "args": ["${workspaceFolder}/path/to/mcp_mother_skills/dist/index.js"],
+      "env": {
+        "MOTHER_PROJECT_PATH": "${workspaceFolder}"
+      }
+    }
+  }
+}</code></pre>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="desktop-config">
+                        <p>Add to <code>~/Library/Application Support/Claude/claude_desktop_config.json</code>:</p>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">json</span>
+                                <button class="copy-btn" data-code='{
+  "mcpServers": {
+    "mother-skills": {
+      "command": "node",
+      "args": ["/path/to/mcp_mother_skills/dist/index.js"],
+      "env": {
+        "MOTHER_PROJECT_PATH": "/path/to/your/project"
+      }
+    }
+  }
+}'>Copy</button>
+                            </div>
+                            <pre><code>{
+  "mcpServers": {
+    "mother-skills": {
+      "command": "node",
+      "args": ["/path/to/mcp_mother_skills/dist/index.js"],
+      "env": {
+        "MOTHER_PROJECT_PATH": "/path/to/your/project"
+      }
+    }
+  }
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="setup-step">
+                    <h3>3. Use It</h3>
+                    <p>Start a conversation and run:</p>
+                    <div class="code-block simple">
+                        <pre><code>sync_skills</code></pre>
+                    </div>
+                    <p>That's it! Mother will detect your project and install relevant skills.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Commands Section -->
+    <section class="commands">
+        <div class="container">
+            <div class="section-header">
+                <h2>Available Commands</h2>
+                <p>Everything you need to manage skills.</p>
+            </div>
+            
+            <div class="commands-grid">
+                <div class="command-card primary">
+                    <code class="command-name">sync_skills</code>
+                    <p>Detect project tech stack and install matching skills. <strong>Run this at the start of each session.</strong></p>
+                </div>
+                
+                <div class="command-card">
+                    <code class="command-name">get_project_context</code>
+                    <p>View detected stack and installed skills.</p>
+                </div>
+                
+                <div class="command-card">
+                    <code class="command-name">get_agent_info</code>
+                    <p>See which AI agent is detected.</p>
+                </div>
+                
+                <div class="command-card">
+                    <code class="command-name">search_skills</code>
+                    <p>Search for available skills by name or keyword.</p>
+                </div>
+                
+                <div class="command-card">
+                    <code class="command-name">install_skill</code>
+                    <p>Manually install a specific skill.</p>
+                </div>
+                
+                <div class="command-card">
+                    <code class="command-name">uninstall_skill</code>
+                    <p>Remove an installed skill.</p>
+                </div>
+                
+                <div class="command-card">
+                    <code class="command-name">check_updates</code>
+                    <p>Check for skill updates.</p>
+                </div>
+                
+                <div class="command-card">
+                    <code class="command-name">redetect</code>
+                    <p>Re-scan project files.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <h2>Ready to supercharge your AI assistant?</h2>
+            <p>Get started with Mother MCP in minutes.</p>
+            <div class="cta-actions">
+                <a href="https://github.com/dmgrok/mcp_mother_skills" class="btn btn-primary btn-lg" target="_blank">
+                    <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    View on GitHub
+                </a>
+                <a href="https://cdn.jsdelivr.net/gh/dmgrok/agent_skills_directory@main/catalog.json" class="btn btn-secondary btn-lg" target="_blank">
+                    Browse Skills Registry
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <span class="logo">🧠</span>
+                    <span>Mother MCP Skills</span>
+                </div>
+                <p>Open source under MIT License</p>
+                <div class="footer-links">
+                    <a href="https://github.com/dmgrok/mcp_mother_skills" target="_blank">GitHub</a>
+                    <a href="https://github.com/dmgrok/agent_skills_directory" target="_blank">Skills Registry</a>
+                    <a href="https://modelcontextprotocol.io" target="_blank">MCP Docs</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
