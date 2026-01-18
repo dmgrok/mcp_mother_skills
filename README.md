@@ -26,9 +26,21 @@ Mother MCP automatically:
 
 ## Installation
 
+### Quick Install via npm (Recommended)
+
+```bash
+# Install globally
+npm install -g mcp-mother-skills
+
+# Or use with npx (no install needed)
+npx mcp-mother-skills
+```
+
+### From Source
+
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/mcp-mother-skills.git
+git clone https://github.com/dmgrok/mcp-mother-skills.git
 cd mcp-mother-skills
 
 # Install dependencies
@@ -48,8 +60,23 @@ Add to your project's `.mcp.json` or global config:
 {
   "mcpServers": {
     "mother-skills": {
-      "command": "node",
-      "args": ["/path/to/mcp-mother-skills/dist/index.js"],
+      "command": "npx",
+      "args": ["mcp-mother-skills"],
+      "env": {
+        "MOTHER_PROJECT_PATH": "."
+      }
+    }
+  }
+}
+```
+
+Or if installed globally:
+
+```json
+{
+  "mcpServers": {
+    "mother-skills": {
+      "command": "mcp-mother-skills",
       "env": {
         "MOTHER_PROJECT_PATH": "."
       }
@@ -66,8 +93,23 @@ Add to your Claude Desktop config (`~/Library/Application Support/Claude/claude_
 {
   "mcpServers": {
     "mother-skills": {
-      "command": "node",
-      "args": ["/path/to/mcp-mother-skills/dist/index.js"],
+      "command": "npx",
+      "args": ["mcp-mother-skills"],
+      "env": {
+        "MOTHER_PROJECT_PATH": "/path/to/your/project"
+      }
+    }
+  }
+}
+```
+
+Or if installed globally:
+
+```json
+{
+  "mcpServers": {
+    "mother-skills": {
+      "command": "mcp-mother-skills",
       "env": {
         "MOTHER_PROJECT_PATH": "/path/to/your/project"
       }
@@ -84,8 +126,23 @@ Add to your VS Code settings or `.vscode/mcp.json`:
 {
   "mcp.servers": {
     "mother-skills": {
-      "command": "node",
-      "args": ["${workspaceFolder}/path/to/mcp-mother-skills/dist/index.js"],
+      "command": "npx",
+      "args": ["mcp-mother-skills"],
+      "env": {
+        "MOTHER_PROJECT_PATH": "${workspaceFolder}"
+      }
+    }
+  }
+}
+```
+
+Or if installed globally:
+
+```json
+{
+  "mcp.servers": {
+    "mother-skills": {
+      "command": "mcp-mother-skills",
       "env": {
         "MOTHER_PROJECT_PATH": "${workspaceFolder}"
       }

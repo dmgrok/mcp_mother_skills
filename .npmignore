@@ -1,0 +1,48 @@
+# Source files (only ship compiled dist/)
+src/
+tests/
+scripts/
+
+# Config files
+.mcp/
+tsconfig.json
+vitest.config.ts
+.eslintrc.*
+
+# Development files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Git
+.git/
+.gitignore
+.github/
+
+# CI/CD
+.travis.yml
+.circleci/
+
+# Testing
+coverage/
+*.test.ts
+*.spec.ts
+
+# Documentation (except what's in files array)
+docs/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.*
+
+# Development dependencies
+node_modules/

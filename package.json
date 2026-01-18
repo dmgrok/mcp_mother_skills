@@ -4,9 +4,17 @@
   "description": "MCP server that dynamically provisions agent skills based on project context",
   "type": "module",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "bin": {
     "mcp-mother-skills": "dist/index.js"
   },
+  "files": [
+    "dist",
+    "examples",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
   "scripts": {
     "build": "tsc",
     "watch": "tsc --watch",
@@ -16,18 +24,31 @@
     "clean": "rm -rf dist",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "prepublishOnly": "npm run clean && npm run build && npm test"
   },
   "keywords": [
     "mcp",
     "model-context-protocol",
     "claude",
     "copilot",
+    "codex",
     "skills",
-    "agent"
+    "agent",
+    "ai",
+    "automation",
+    "devtools"
   ],
   "author": "dmgrok",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dmgrok/mcp_mother_skills.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dmgrok/mcp_mother_skills/issues"
+  },
+  "homepage": "https://github.com/dmgrok/mcp_mother_skills#readme",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",
     "@specfy/stack-analyser": "^1.27.4",

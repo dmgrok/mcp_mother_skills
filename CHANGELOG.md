@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- npm package configuration for public registry deployment
+- `.npmignore` file to exclude development files from published package
+- `prepublishOnly` script for automated pre-publish validation
+- `PUBLISHING.md` guide with step-by-step deployment instructions
+- MIT `LICENSE` file
+- TypeScript type definitions export (`types` field in package.json)
+- **GitHub Actions workflow for automated npm publishing on release**
+- Workflow triggers on GitHub release publication
+- Automated testing, building, and publishing pipeline
+- npm provenance attestation for package integrity
+
+### Changed
+- Updated installation instructions to use `npm install` and `npx`
+- Configuration examples now use `npx mcp-mother-skills` instead of local paths
+- Enhanced package.json with repository, homepage, bugs URLs
+- Expanded keywords for better npm discoverability
+- Updated PUBLISHING.md with automated and manual publishing workflows
+
 ## [0.1.1] - 2026-01-18
 
 ### Added
