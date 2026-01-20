@@ -4,14 +4,12 @@ A Model Context Protocol (MCP) server that dynamically provisions agent skills b
 
 ## Demo
 
-![Mother MCP Skills Demo](docs/demo.gif)
-
-> **Watch it in action**: Automatic skill detection and installation in seconds.
+> **Coming Soon**: Interactive demo showing automatic skill detection and installation in seconds.
 
 ## Resources
 
 📄 **[Full Documentation](https://dmgrok.github.io/mcp_mother_skills/)** — Complete setup guide and feature walkthrough  
-📊 **[Visual Overview (PDF)](docs/MOTHER-MCP-SKILLS/Mother-MCP-Skills.pdf)** — One-page infographic explaining the architecture  
+📊 **[Visual Overview (PDF)](docs/MOTHER-MCP-SKILLS.pdf)** — One-page infographic explaining the architecture  
 🎬 **[Video Demo](#)** — Coming soon
 
 ## Supported Agents
