@@ -40,6 +40,12 @@
             <div class="hero-badge">Model Context Protocol Server</div>
             <h1>Stop Configuring AI Skills.<br>Start Building.</h1>
             <p class="hero-subtitle">One command gives your AI assistant perfect context for your stack. No manual config. No context switching. Just <code>setup</code> and code.</p>
+            
+            <div style="margin: 2rem auto; max-width: 500px; padding: 1rem 1.5rem; background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 8px;">
+                <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem; text-align: center;">Quick Install via NPM</div>
+                <code style="display: block; text-align: center; color: var(--accent); font-size: 1rem;">npm install -g mcp-mother-skills</code>
+            </div>
+            
             <div class="hero-stats">
                 <div class="stat">
                     <div class="stat-value">700+</div>
@@ -50,8 +56,8 @@
                     <div class="stat-label">Detection Strategy</div>
                 </div>
                 <div class="stat">
-                    <div class="stat-value">3 Agents</div>
-                    <div class="stat-label">Claude, Copilot, Codex</div>
+                    <div class="stat-value">4 Agents</div>
+                    <div class="stat-label">Claude, Copilot, Codex, Vercel</div>
                 </div>
             </div>
             <div class="hero-actions">
@@ -357,6 +363,18 @@
                     </div>
                     <h3>OpenAI Codex</h3>
                     <p>Follows the Open Agent Skills Standard. Compatible with AGENTS.md workflow.</p>
+                    <div class="agent-badge">✅ Full Support</div>
+                </div>
+                
+                <div class="agent-card">
+                    <div class="agent-logo">
+                        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="50" cy="50" r="45" fill="#000000"/>
+                            <path d="M50 20 L80 65 L20 65 Z" fill="white"/>
+                        </svg>
+                    </div>
+                    <h3>Vercel v0</h3>
+                    <p>Skills optimized for v0's AI-powered frontend generation and deployment workflow.</p>
                     <div class="agent-badge">✅ Full Support</div>
                 </div>
             </div>
@@ -853,6 +871,27 @@
             <div class="setup-steps">
                 <div class="setup-step">
                     <h3>1. Install</h3>
+                    
+                    <h4 style="margin-top: 1.5rem; margin-bottom: 0.5rem; color: var(--text-secondary); font-size: 1rem;">Recommended: NPM Package</h4>
+                    <p style="margin-bottom: 1rem; color: var(--text-muted);">Easiest way to get started — no manual builds required:</p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">bash</span>
+                            <button class="copy-btn" data-code="# Install globally
+npm install -g mcp-mother-skills
+
+# Or use with npx (no install needed)
+npx mcp-mother-skills">Copy</button>
+                        </div>
+                        <pre><code># Install globally
+npm install -g mcp-mother-skills
+
+# Or use with npx (no install needed)
+npx mcp-mother-skills</code></pre>
+                    </div>
+                    
+                    <h4 style="margin-top: 2rem; margin-bottom: 0.5rem; color: var(--text-secondary); font-size: 1rem;">Alternative: Build from Source</h4>
+                    <p style="margin-bottom: 1rem; color: var(--text-muted);">For development or custom modifications:</p>
                     <div class="code-block">
                         <div class="code-header">
                             <span class="code-lang">bash</span>
@@ -875,10 +914,40 @@ npm run build</code></pre>
                         <button class="tab-btn active" data-tab="claude">Claude Code</button>
                         <button class="tab-btn" data-tab="copilot">GitHub Copilot</button>
                         <button class="tab-btn" data-tab="desktop">Claude Desktop</button>
+                        <button class="tab-btn" data-tab="vercel">Vercel v0</button>
                     </div>
                     
                     <div class="tab-content active" id="claude-config">
                         <p>Add to your project's <code>.mcp.json</code>:</p>
+                        <h4 style="margin-top: 1rem; margin-bottom: 0.5rem; color: var(--text-secondary); font-size: 0.95rem;">Using NPM Package (Recommended)</h4>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">json</span>
+                                <button class="copy-btn" data-code='{
+  "mcpServers": {
+    "mother-skills": {
+      "command": "npx",
+      "args": ["mcp-mother-skills"],
+      "env": {
+        "MOTHER_PROJECT_PATH": "."
+      }
+    }
+  }
+}'>Copy</button>
+                            </div>
+                            <pre><code>{
+  "mcpServers": {
+    "mother-skills": {
+      "command": "npx",
+      "args": ["mcp-mother-skills"],
+      "env": {
+        "MOTHER_PROJECT_PATH": "."
+      }
+    }
+  }
+}</code></pre>
+                        </div>
+                        <h4 style="margin-top: 1.5rem; margin-bottom: 0.5rem; color: var(--text-secondary); font-size: 0.95rem;">Using Local Build</h4>
                         <div class="code-block">
                             <div class="code-header">
                                 <span class="code-lang">json</span>
@@ -910,6 +979,35 @@ npm run build</code></pre>
                     
                     <div class="tab-content" id="copilot-config">
                         <p>Add to your <code>.vscode/mcp.json</code>:</p>
+                        <h4 style="margin-top: 1rem; margin-bottom: 0.5rem; color: var(--text-secondary); font-size: 0.95rem;">Using NPM Package (Recommended)</h4>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">json</span>
+                                <button class="copy-btn" data-code='{
+  "mcp.servers": {
+    "mother-skills": {
+      "command": "npx",
+      "args": ["mcp-mother-skills"],
+      "env": {
+        "MOTHER_PROJECT_PATH": "${workspaceFolder}"
+      }
+    }
+  }
+}'>Copy</button>
+                            </div>
+                            <pre><code>{
+  "mcp.servers": {
+    "mother-skills": {
+      "command": "npx",
+      "args": ["mcp-mother-skills"],
+      "env": {
+        "MOTHER_PROJECT_PATH": "${workspaceFolder}"
+      }
+    }
+  }
+}</code></pre>
+                        </div>
+                        <h4 style="margin-top: 1.5rem; margin-bottom: 0.5rem; color: var(--text-secondary); font-size: 0.95rem;">Using Local Build</h4>
                         <div class="code-block">
                             <div class="code-header">
                                 <span class="code-lang">json</span>
@@ -941,6 +1039,35 @@ npm run build</code></pre>
                     
                     <div class="tab-content" id="desktop-config">
                         <p>Add to <code>~/Library/Application Support/Claude/claude_desktop_config.json</code>:</p>
+                        <h4 style="margin-top: 1rem; margin-bottom: 0.5rem; color: var(--text-secondary); font-size: 0.95rem;">Using NPM Package (Recommended)</h4>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">json</span>
+                                <button class="copy-btn" data-code='{
+  "mcpServers": {
+    "mother-skills": {
+      "command": "npx",
+      "args": ["mcp-mother-skills"],
+      "env": {
+        "MOTHER_PROJECT_PATH": "/path/to/your/project"
+      }
+    }
+  }
+}'>Copy</button>
+                            </div>
+                            <pre><code>{
+  "mcpServers": {
+    "mother-skills": {
+      "command": "npx",
+      "args": ["mcp-mother-skills"],
+      "env": {
+        "MOTHER_PROJECT_PATH": "/path/to/your/project"
+      }
+    }
+  }
+}</code></pre>
+                        </div>
+                        <h4 style="margin-top: 1.5rem; margin-bottom: 0.5rem; color: var(--text-secondary); font-size: 0.95rem;">Using Local Build</h4>
                         <div class="code-block">
                             <div class="code-header">
                                 <span class="code-lang">json</span>
@@ -969,6 +1096,66 @@ npm run build</code></pre>
 }</code></pre>
                         </div>
                     </div>
+                    
+                    <div class="tab-content" id="vercel-config">
+                        <p>Add to your project's <code>.v0/mcp.json</code>:</p>
+                        <h4 style="margin-top: 1rem; margin-bottom: 0.5rem; color: var(--text-secondary); font-size: 0.95rem;">Using NPM Package (Recommended)</h4>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">json</span>
+                                <button class="copy-btn" data-code='{
+  "mcpServers": {
+    "mother-skills": {
+      "command": "npx",
+      "args": ["mcp-mother-skills"],
+      "env": {
+        "MOTHER_PROJECT_PATH": "."
+      }
+    }
+  }
+}'>Copy</button>
+                            </div>
+                            <pre><code>{
+  "mcpServers": {
+    "mother-skills": {
+      "command": "npx",
+      "args": ["mcp-mother-skills"],
+      "env": {
+        "MOTHER_PROJECT_PATH": "."
+      }
+    }
+  }
+}</code></pre>
+                        </div>
+                        <h4 style="margin-top: 1.5rem; margin-bottom: 0.5rem; color: var(--text-secondary); font-size: 0.95rem;">Using Local Build</h4>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">json</span>
+                                <button class="copy-btn" data-code='{
+  "mcpServers": {
+    "mother-skills": {
+      "command": "node",
+      "args": ["/path/to/mcp_mother_skills/dist/index.js"],
+      "env": {
+        "MOTHER_PROJECT_PATH": "."
+      }
+    }
+  }
+}'>Copy</button>
+                            </div>
+                            <pre><code>{
+  "mcpServers": {
+    "mother-skills": {
+      "command": "node",
+      "args": ["/path/to/mcp_mother_skills/dist/index.js"],
+      "env": {
+        "MOTHER_PROJECT_PATH": "."
+      }
+    }
+  }
+}</code></pre>
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="setup-step">
@@ -980,6 +1167,7 @@ npm run build</code></pre>
                         <button class="tab-btn" data-tab="claude-inst">Claude Code</button>
                         <button class="tab-btn" data-tab="codex-inst">OpenAI Codex</button>
                         <button class="tab-btn" data-tab="cursor-inst">Cursor</button>
+                        <button class="tab-btn" data-tab="vercel-inst">Vercel v0</button>
                     </div>
                     
                     <div class="tab-content active" id="copilot-inst-config">
@@ -1035,6 +1223,23 @@ skills are loaded.</code></pre>
                     
                     <div class="tab-content" id="cursor-inst-config">
                         <p>Add to <code>.cursorrules</code> in your project root:</p>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-lang">markdown</span>
+                                <button class="copy-btn" data-code="## Startup
+
+At the start of each conversation, call `setup` (for first-time use) or `sync_skills` (for ongoing updates) to ensure project-relevant skills are loaded.">Copy</button>
+                            </div>
+                            <pre><code>## Startup
+
+At the start of each conversation, call `setup` (for first-time use) 
+or `sync_skills` (for ongoing updates) to ensure project-relevant 
+skills are loaded.</code></pre>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="vercel-inst-config">
+                        <p>Add to <code>.v0/instructions.md</code> in your project root:</p>
                         <div class="code-block">
                             <div class="code-header">
                                 <span class="code-lang">markdown</span>
@@ -1115,6 +1320,11 @@ skills are loaded.</code></pre>
                 <div class="command-card">
                     <code class="command-name">redetect</code>
                     <p>Re-scan project files.</p>
+                </div>
+                
+                <div class="command-card">
+                    <code class="command-name">reset_skills</code>
+                    <p><strong>Start fresh</strong> - Remove all installed skills and optionally clear config.</p>
                 </div>
             </div>
         </div>

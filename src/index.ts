@@ -4,6 +4,7 @@
  * Mother MCP Server - Dynamic skill provisioning for Claude and Copilot
  */
 
+import 'dotenv/config';
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import {
@@ -13,6 +14,7 @@ import {
 } from '@modelcontextprotocol/sdk/types.js';
 
 import * as path from 'path';
+import * as fs from 'fs/promises';
 import { 
   SyncSkillsParams, 
   SearchSkillsParams, 
@@ -21,13 +23,15 @@ import {
   SetAgentPreferenceParams,
   ConfirmSyncParams,
   SyncResult,
-  SyncPreview
+  SyncPreview,
+  AgentId
 } from './types.js';
 import { AgentDetector } from './agent-detector.js';
 import { ProjectDetector } from './project-detector.js';
 import { RegistryClient } from './registry-client.js';
 import { SkillInstaller } from './skill-installer.js';
 import { ConfigManager } from './config-manager.js';
+import { getAgentProfile } from './agent-profiles.js';
 
 // Get project path from environment or current directory
 const PROJECT_PATH = process.env.MOTHER_PROJECT_PATH || process.cwd();
@@ -273,6 +277,38 @@ Use after preview_sync to apply approved changes. You can:
     inputSchema: {
       type: 'object',
       properties: {}
+    }
+  },
+  {
+    name: 'reset_skills',
+    description: `Reset Mother MCP by removing all installed skills and optionally clearing configuration.
+This is useful for starting fresh or troubleshooting issues. 
+
+Warning: This will permanently delete all installed skills. Use with caution.`,
+    inputSchema: {
+      type: 'object',
+      properties: {
+        clear_config: {
+          type: 'boolean',
+          description: 'Also remove Mother configuration files (.mcp/mother/)',
+          default: false
+        },
+        clear_cache: {
+          type: 'boolean',
+          description: 'Clear the skill registry cache',
+          default: false
+        },
+        all_agents: {
+          type: 'boolean',
+          description: 'Remove skills for all agents (Claude, Copilot, Codex), not just the detected one',
+          default: false
+        },
+        confirm: {
+          type: 'boolean',
+          description: 'Confirm you want to proceed with the reset',
+          default: false
+        }
+      }
     }
   }
 ];
@@ -649,6 +685,111 @@ async function handleRedetect(): Promise<object> {
   };
 }
 
+interface ResetSkillsParams {
+  clear_config?: boolean;
+  clear_cache?: boolean;
+  all_agents?: boolean;
+  confirm?: boolean;
+}
+
+async function handleResetSkills(params: ResetSkillsParams): Promise<object> {
+  if (!params.confirm) {
+    return {
+      error: 'Reset cancelled',
+      message: 'You must set confirm=true to proceed with resetting skills. This action cannot be undone.',
+      warning: 'This will permanently delete all installed skills.'
+    };
+  }
+
+  const config = await configManager.loadConfig();
+  const detection = await agentDetector.detect();
+  const results = {
+    removed_skills: [] as string[],
+    removed_paths: [] as string[],
+    cleared_config: false,
+    cleared_cache: false,
+    errors: [] as string[]
+  };
+
+  // Determine which agents to reset
+  const agentsToReset: AgentId[] = params.all_agents 
+    ? ['claude', 'copilot', 'codex', 'generic']
+    : [detection.agent.id];
+
+  // Remove skills for each agent
+  for (const agentId of agentsToReset) {
+    const profile = getAgentProfile(agentId);
+    
+    for (const skillPath of profile.projectSkillPaths) {
+      const fullPath = path.join(PROJECT_PATH, skillPath);
+      
+      try {
+        const stats = await fs.stat(fullPath);
+        if (stats.isDirectory()) {
+          // List skills before removing
+          const entries = await fs.readdir(fullPath, { withFileTypes: true });
+          const skillDirs = entries.filter(e => e.isDirectory()).map(e => e.name);
+          
+          // Remove the entire skills directory
+          await fs.rm(fullPath, { recursive: true, force: true });
+          
+          results.removed_skills.push(...skillDirs);
+          results.removed_paths.push(fullPath);
+        }
+      } catch (error) {
+        if ((error as NodeJS.ErrnoException).code !== 'ENOENT') {
+          results.errors.push(`Failed to remove ${fullPath}: ${(error as Error).message}`);
+        }
+        // ENOENT means directory doesn't exist, which is fine
+      }
+    }
+  }
+
+  // Clear configuration if requested
+  if (params.clear_config) {
+    const configPath = path.join(PROJECT_PATH, '.mcp', 'mother');
+    try {
+      await fs.rm(configPath, { recursive: true, force: true });
+      results.cleared_config = true;
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== 'ENOENT') {
+        results.errors.push(`Failed to clear config: ${(error as Error).message}`);
+      }
+    }
+  }
+
+  // Clear cache if requested
+  if (params.clear_cache) {
+    const cachePath = configManager.getCachePath();
+    try {
+      await fs.rm(cachePath, { recursive: true, force: true });
+      results.cleared_cache = true;
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== 'ENOENT') {
+        results.errors.push(`Failed to clear cache: ${(error as Error).message}`);
+      }
+    }
+  }
+
+  return {
+    success: results.errors.length === 0,
+    message: results.errors.length === 0 
+      ? 'Successfully reset Mother MCP'
+      : 'Reset completed with some errors',
+    ...results,
+    summary: {
+      skills_removed: [...new Set(results.removed_skills)].length,
+      paths_cleared: results.removed_paths.length,
+      config_cleared: results.cleared_config,
+      cache_cleared: results.cleared_cache
+    },
+    next_steps: [
+      'Run setup to reinstall skills',
+      'Or use sync_skills to auto-detect and install'
+    ]
+  };
+}
+
 // Format sync result for display
 function formatSyncResult(result: SyncResult): string {
   let output = `## Skill Sync Complete\n\n`;
@@ -868,7 +1009,7 @@ async function main(): Promise<void> {
   const server = new Server(
     {
       name: 'mcp-mother-skills',
-      version: '1.0.0',
+      version: '0.2.0',
     },
     {
       capabilities: {
@@ -968,6 +1109,10 @@ async function main(): Promise<void> {
 
         case 'redetect':
           result = await handleRedetect();
+          break;
+
+        case 'reset_skills':
+          result = await handleResetSkills((args || {}) as ResetSkillsParams);
           break;
 
         default:

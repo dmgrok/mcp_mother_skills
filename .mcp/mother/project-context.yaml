@@ -1,4 +1,4 @@
-generated_at: 2026-01-18T07:57:49.144Z
+generated_at: 2026-01-20T16:24:54.933Z
 detection_sources:
   - package.json
   - config files
@@ -13,7 +13,10 @@ detected:
       source: package.json (typescript)
   frameworks: []
   databases: []
-  infrastructure: []
+  infrastructure:
+    - id: github-actions
+      confidence: 0.9
+      source: "file: .github/workflows/publish.yml"
   tools:
     - id: vitest
       version: 4.0.17
@@ -23,12 +26,7 @@ detected:
       version: 8.55.0
       confidence: 0.95
       source: package.json (eslint)
-installed_skills:
-  - name: anthropics-mcp-builder
-    version: 1.0.0
-    source: unknown
-    installed_at: 2026-01-17T23:56:18.928Z
-    path: /Users/a447ah/Github/mcp_mother_skills/.github/skills/anthropics-mcp-builder
+installed_skills: []
 manual:
   include_skills:
     - mcp-builder

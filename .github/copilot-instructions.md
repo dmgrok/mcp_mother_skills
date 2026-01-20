@@ -2,7 +2,7 @@
 
 ## Startup
 
-At the start of each conversation, call `setup` (for first-time use) or `sync_skills` (for ongoing updates) to ensure project-relevant skills are loaded.
+**Only at the very start of a NEW conversation** (when no context exists yet), call `setup` (for first-time use) or `sync_skills` (for ongoing updates) to ensure project-relevant skills are loaded. Do NOT call these repeatedly during the same conversation unless explicitly requested by the user.
 
 ## Project Overview
 
@@ -106,4 +106,40 @@ dependencies: [other-skill]
 # Skill instructions in markdown...
 ```
 
-Whenever tehre is a new feature update the readme, changelog and static docs webpage
+## Version Management
+
+When updating the project version (for new features or bug fixes), ensure version coherency across ALL files:
+
+1. **package.json** - Update `"version"` field following semantic versioning:
+   - Patch (0.2.0 → 0.2.1): Bug fixes, minor changes
+   - Minor (0.2.1 → 0.3.0): New features, backwards compatible
+   - Major (0.3.0 → 1.0.0): Breaking changes
+
+2. **CHANGELOG.md** - Move [Unreleased] to new version section:
+   ```markdown
+   ## [Unreleased]
+   
+   ## [0.3.0] - YYYY-MM-DD
+   ### Added
+   - New feature description
+   ```
+
+3. **src/index.ts** - Update MCP server version to match package.json:
+   ```typescript
+   const server = new Server({
+     name: 'mcp-mother-skills',
+     version: '0.3.0',  // Must match package.json
+   })
+   ```
+
+4. **Documentation** - Update README, docs/index.html, and any version references
+
+**Always keep these versions synchronized** to maintain consistency across the project.
+
+## Documentation Updates
+
+Whenever there is a new feature, update:
+- README.md (usage examples, command table)
+- CHANGELOG.md (with version and date)
+- docs/index.html (static docs webpage)
+- Any relevant guide files in docs/

@@ -218,7 +218,7 @@ skills:
 
     it('should parse toon catalog format', async () => {
       const toonRegistry: RegistrySource[] = [
-        { url: 'https://cdn.jsdelivr.net/gh/dmgrok/agent_skills_directory@main/catalog.toon', priority: 1 }
+        { url: 'https://cdn.jsdelivr.net/gh/dmgrok/agent_skills_directory@main/catalog.json', priority: 1 }
       ];
 
       const toonClient = new RegistryClient(toonRegistry, mockCachePath, 7);

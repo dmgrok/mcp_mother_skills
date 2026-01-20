@@ -7,7 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-01-20
+
 ### Added
+- **`reset_skills` tool** - Start fresh by removing all installed skills
+  - Safely removes all installed skills with required `confirm=true` parameter
+  - `all_agents` option to reset skills for all agents (Claude, Copilot, Codex)
+  - `clear_config` option to remove Mother configuration files (`.mcp/mother/`)
+  - `clear_cache` option to clear the skill registry cache
+  - Handles errors gracefully (e.g., missing directories)
+  - Returns detailed summary of removed skills and cleared paths
+  - Provides next steps guidance after reset
 - npm package configuration for public registry deployment
 - `.npmignore` file to exclude development files from published package
 - `prepublishOnly` script for automated pre-publish validation
@@ -25,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Enhanced package.json with repository, homepage, bugs URLs
 - Expanded keywords for better npm discoverability
 - Updated PUBLISHING.md with automated and manual publishing workflows
+- Added comprehensive documentation for `reset_skills` in README
 
 ## [0.1.1] - 2026-01-18
 

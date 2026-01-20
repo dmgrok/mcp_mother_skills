@@ -1,6 +1,18 @@
 # Mother MCP Skills
 
-A Model Context Protocol (MCP) server that dynamically provisions agent skills based on project context. Works with **Claude Code**, **GitHub Copilot**, and **OpenAI Codex**.
+A Model Context Protocol (MCP) server that dynamically provisions agent skills based on project context. Works with **Claude Code**, **GitHub Copilot**, **OpenAI Codex**, and **Vercel v0**.
+
+## Demo
+
+![Mother MCP Skills Demo](docs/demo.gif)
+
+> **Watch it in action**: Automatic skill detection and installation in seconds.
+
+## Resources
+
+📄 **[Full Documentation](https://dmgrok.github.io/mcp_mother_skills/)** — Complete setup guide and feature walkthrough  
+📊 **[Visual Overview (PDF)](docs/MOTHER-MCP-SKILLS/Mother-MCP-Skills.pdf)** — One-page infographic explaining the architecture  
+🎬 **[Video Demo](#)** — Coming soon
 
 ## Supported Agents
 
@@ -10,6 +22,7 @@ A Model Context Protocol (MCP) server that dynamically provisions agent skills b
 | Claude Desktop | ✅ Full Support | Auto-detected via MCP client info |
 | GitHub Copilot | ✅ Full Support | Auto-detected via VS Code environment |
 | OpenAI Codex | ✅ Full Support | Auto-detected via `CODEX_HOME` env var |
+| Vercel v0 | ✅ Full Support | Auto-detected via project structure |
 | Other MCP Clients | ✅ Generic Support | Falls back to generic profile |
 
 ## What It Does
@@ -180,6 +193,36 @@ This will:
 - Download matching skills from the registry
 - Report what was added/updated/removed
 
+### Reset Skills (Start Fresh)
+
+If you need to start over or troubleshoot issues, use `reset_skills`:
+
+```
+Reset all my Mother MCP skills with confirm=true
+```
+
+**Important**: You must set `confirm=true` to proceed with the reset.
+
+Options:
+- `confirm` (required): Set to `true` to confirm the reset action
+- `all_agents`: Remove skills for all agents (Claude, Copilot, Codex), not just the detected one
+- `clear_config`: Also remove Mother configuration files (`.mcp/mother/`)
+- `clear_cache`: Clear the skill registry cache
+
+Examples:
+```
+# Reset only the current agent's skills
+reset_skills with confirm=true
+
+# Reset all agents and clear config
+reset_skills with confirm=true, all_agents=true, clear_config=true
+
+# Full reset including cache
+reset_skills with confirm=true, all_agents=true, clear_config=true, clear_cache=true
+```
+
+This will permanently delete all installed skills. After resetting, run `setup` to reinstall skills.
+
 ### Other Commands
 
 | Command | Description |
@@ -194,6 +237,7 @@ This will:
 | `check_updates` | Check for skill updates |
 | `set_agent_preference` | Set preferred agent (auto/claude/copilot/codex/both) |
 | `redetect` | Re-scan project files |
+| `reset_skills` | **Reset all skills** - Remove all installed skills and optionally clear config |
 
 ## Project Configuration
 
