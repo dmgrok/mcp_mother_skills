@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Community quality signals** - Registry catalog now supports metadata for skill discovery
+  - `downloads`: Install count (updated by registry maintainer)
+  - `stars`: GitHub stars passthrough from source repository
+  - `verified`: Publisher verification badge
+  - `publisher`: Publisher info with name, URL, and verification status
+  - `compatibility`: Agent compatibility matrix (Claude, Copilot, Codex, v0)
+  - `repository`: Source repository URL for linking
+- Quality signals displayed in `setup` recommendations with badges (✓, ⭐, 📦)
+- Quality signals included in `search_skills` results
+- New `SkillPublisher` and `SkillCompatibility` TypeScript interfaces
+- Documentation for registry catalog format with community fields
+
+### Changed
+- `RegistrySkill` interface extended with optional community fields
+- Updated example registry.yaml with sample community metadata
+
 ## [0.2.1] - 2026-01-23
 
 ### Added

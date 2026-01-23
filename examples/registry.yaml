@@ -16,6 +16,20 @@ skills:
       packages: ["typescript"]
       files: ["tsconfig.json", "*.ts", "*.tsx"]
     tags: [language]
+    # Community quality signals
+    downloads: 15420
+    stars: 342
+    verified: true
+    publisher:
+      name: "Mother Skills Team"
+      url: "https://github.com/mother-mcp"
+      verified: true
+    compatibility:
+      claude: true
+      copilot: true
+      codex: true
+      v0: true
+    repository: "https://github.com/mother-mcp/skills"
     
   - name: python
     path: skills/python
@@ -25,6 +39,16 @@ skills:
     triggers:
       files: ["*.py", "pyproject.toml", "requirements.txt"]
     tags: [language]
+    downloads: 12800
+    stars: 289
+    verified: true
+    publisher:
+      name: "Mother Skills Team"
+      verified: true
+    compatibility:
+      claude: true
+      copilot: true
+      codex: true
 
   - name: rust
     path: skills/rust
@@ -34,6 +58,10 @@ skills:
     triggers:
       files: ["Cargo.toml", "*.rs"]
     tags: [language]
+    downloads: 3200
+    stars: 156
+    publisher:
+      name: "Community Contributor"
 
   # === Frontend Framework Skills ===
   
@@ -46,6 +74,17 @@ skills:
       packages: ["react", "react-dom"]
     dependencies: []
     tags: [framework, frontend]
+    downloads: 28500
+    stars: 523
+    verified: true
+    publisher:
+      name: "Mother Skills Team"
+      verified: true
+    compatibility:
+      claude: true
+      copilot: true
+      codex: true
+      v0: true
     
   - name: nextjs
     path: skills/nextjs
@@ -57,6 +96,16 @@ skills:
       files: ["next.config.js", "next.config.mjs", "next.config.ts"]
     dependencies: [typescript, react]
     tags: [framework, frontend, fullstack]
+    downloads: 22100
+    stars: 487
+    verified: true
+    publisher:
+      name: "Mother Skills Team"
+      verified: true
+    compatibility:
+      claude: true
+      copilot: true
+      v0: true
     
   - name: vue
     path: skills/vue
@@ -67,6 +116,8 @@ skills:
       packages: ["vue"]
       files: ["vue.config.js", "nuxt.config.js"]
     tags: [framework, frontend]
+    downloads: 8700
+    stars: 201
 
   # === Backend Framework Skills ===
   
@@ -79,6 +130,16 @@ skills:
       packages: ["fastapi"]
     dependencies: [python]
     tags: [framework, backend, api]
+    downloads: 9400
+    stars: 178
+    verified: true
+    publisher:
+      name: "Mother Skills Team"
+      verified: true
+    compatibility:
+      claude: true
+      copilot: true
+      codex: true
     
   - name: express
     path: skills/express
@@ -88,6 +149,11 @@ skills:
     triggers:
       packages: ["express"]
     tags: [framework, backend, api]
+    downloads: 11200
+    stars: 234
+    compatibility:
+      claude: true
+      copilot: true
 
   - name: nestjs
     path: skills/nestjs
@@ -98,6 +164,8 @@ skills:
       packages: ["@nestjs/core"]
     dependencies: [typescript]
     tags: [framework, backend]
+    downloads: 6800
+    stars: 145
 
   # === Database Skills ===
   

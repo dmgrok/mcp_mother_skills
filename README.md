@@ -1,6 +1,8 @@
 # Mother MCP Skills
 
-A Model Context Protocol (MCP) server that dynamically provisions agent skills based on project context. Works with **Claude Code**, **GitHub Copilot**, **OpenAI Codex**, and **Vercel v0**.
+**The npm for AI agent skills.** A Model Context Protocol (MCP) server that automatically provisions the right skills for your project — across Claude Code, GitHub Copilot, OpenAI Codex, and Vercel v0.
+
+> *Just like npm discovers and installs the packages you need, Mother MCP discovers and installs the AI skills your project needs.*
 
 ## Demo
 
@@ -350,6 +352,71 @@ Mother MCP fetches skills from the [Agent Skills Directory](https://github.com/d
 
 **Total: 112 skills** across documents, creative, development, data, enterprise, integrations, and other categories.
 
+### Bring Your Own Registry
+
+**Want skills tailored for your organization?** The registry URL is fully configurable. Just point to your own catalog:
+
+```yaml
+# .mcp/mother/config.yaml
+registry:
+  # Use your company's private registry
+  - url: "https://skills.yourcompany.com/catalog.json"
+    priority: 1
+  
+  # Optionally keep the public registry as fallback
+  - url: "https://cdn.jsdelivr.net/gh/dmgrok/agent_skills_directory@main/catalog.json"
+    priority: 2
+```
+
+This lets you:
+- **Curate skills** for your organization's specific tech stack and standards
+- **Add proprietary skills** that encode internal knowledge and patterns  
+- **Control what skills are available** to your engineering teams
+- **Version and audit** skills through your own infrastructure
+
+Your private registry just needs to serve a JSON catalog in the same format as the [public catalog](https://cdn.jsdelivr.net/gh/dmgrok/agent_skills_directory@main/catalog.json).
+
+### Registry Catalog Format
+
+The registry catalog supports **community quality signals** - metadata that helps users discover and trust skills:
+
+```yaml
+skills:
+  - name: react
+    path: skills/react
+    version: "1.5.0"
+    description: "React patterns, hooks, and component architecture"
+    triggers:
+      packages: ["react", "react-dom"]
+    tags: [framework, frontend]
+    
+    # Community Quality Signals (all optional)
+    downloads: 28500           # Install count
+    stars: 523                 # GitHub stars
+    verified: true             # Publisher verified badge
+    publisher:
+      name: "Mother Skills Team"
+      url: "https://github.com/mother-mcp"
+      verified: true
+    compatibility:             # Agent compatibility matrix
+      claude: true
+      copilot: true
+      codex: true
+      v0: true
+    repository: "https://github.com/mother-mcp/skills"
+```
+
+| Field | Description |
+|-------|-------------|
+| `downloads` | Number of installs (updated by registry maintainer) |
+| `stars` | GitHub stars passthrough from source repo |
+| `verified` | Quick verified badge flag |
+| `publisher` | Publisher info with optional verification |
+| `compatibility` | Which AI agents this skill works with |
+| `repository` | Source repository URL |
+
+These signals are displayed in search results and recommendations to help users choose quality skills.
+
 ### Available Skills
 
 **Documents & Data**: `pdf`, `docx`, `pptx`, `xlsx`, `doc-coauthoring`
@@ -467,6 +534,38 @@ npm run build
 # Watch mode
 npm run watch
 ```
+
+## Community & Roadmap
+
+Mother MCP is evolving into a community-driven skill ecosystem — **the npm for AI skills**. Here's what we're building:
+
+### Quality Signals (Coming Soon)
+
+| Feature | Description | Status |
+|---------|-------------|--------|
+| ⭐ **Skill ratings** | Community upvotes/downvotes on skill quality | Planned |
+| 📊 **Download counts** | See how many developers use each skill | Planned |
+| ✓ **Verified publishers** | Trust badges for official sources (Anthropic, GitHub, etc.) | Planned |
+| 💬 **Reviews & use cases** | "Worked great for React 19 + TypeScript" | Planned |
+| 🏷️ **Compatibility matrix** | Works with: Claude ✓, Copilot ✓, Codex ✓ | Planned |
+
+### Contribution Tools (Coming Soon)
+
+| Feature | Description | Status |
+|---------|-------------|--------|
+| 📤 **`mother publish`** | CLI to publish skills to the registry | Planned |
+| 📦 **Skill templates** | Starter templates for common skill types | Planned |
+| 🔀 **Fork & customize** | Base your skill on existing ones | Planned |
+| 📚 **Skill collections** | Curated bundles ("Enterprise Security Pack") | Planned |
+
+### How You Can Help
+
+1. **Star skills you find useful** — helps surface quality
+2. **Report issues** with skills that have outdated advice
+3. **Contribute skills** via PR to [agent_skills_directory](https://github.com/dmgrok/agent_skills_directory)
+4. **Share your use cases** — what skills would help your workflow?
+
+Join the discussion: [GitHub Issues](https://github.com/dmgrok/mcp_mother_skills/issues)
 
 ## License
 

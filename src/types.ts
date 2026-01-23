@@ -29,6 +29,21 @@ export interface SkillTrigger {
   manual_only?: boolean;
 }
 
+// Publisher information for verified skills
+export interface SkillPublisher {
+  name: string;
+  url?: string;
+  verified?: boolean;
+}
+
+// Agent compatibility matrix
+export interface SkillCompatibility {
+  claude?: boolean;
+  copilot?: boolean;
+  codex?: boolean;
+  v0?: boolean;
+}
+
 export interface RegistrySkill {
   name: string;
   path: string;
@@ -38,6 +53,14 @@ export interface RegistrySkill {
   dependencies?: string[];
   tags?: string[];
   last_updated?: string;
+  
+  // Community quality signals (no backend needed - metadata in registry)
+  downloads?: number;           // Install count (updated by registry maintainer)
+  stars?: number;               // GitHub stars passthrough
+  verified?: boolean;           // Quick verified badge flag
+  publisher?: SkillPublisher;   // Publisher info with verification
+  compatibility?: SkillCompatibility;  // Agent compatibility matrix
+  repository?: string;          // Source repository URL for stars lookup
 }
 
 export interface RegistryIndex {

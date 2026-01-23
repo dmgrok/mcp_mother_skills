@@ -24,7 +24,10 @@ import {
   ConfirmSyncParams,
   SyncResult,
   SyncPreview,
-  AgentId
+  AgentId,
+  RegistrySkill,
+  SkillPublisher,
+  SkillCompatibility
 } from './types.js';
 import { AgentDetector } from './agent-detector.js';
 import { ProjectDetector } from './project-detector.js';
@@ -324,10 +327,90 @@ interface SkillRecommendation {
     name: string;
     description: string;
     tags: string[];
+    // Community quality signals
+    downloads?: number;
+    stars?: number;
+    verified?: boolean;
+    publisher?: SkillPublisher;
+    compatibility?: SkillCompatibility;
   };
   match_reason: string;
   matched_technologies: string[];
   confidence: 'high' | 'medium' | 'low';
+}
+
+/**
+ * Format community signals as badges for display
+ */
+function formatCommunitySignals(skill: RegistrySkill): string {
+  const badges: string[] = [];
+  
+  if (skill.verified) {
+    badges.push('✓ Verified');
+  }
+  
+  if (skill.stars !== undefined && skill.stars > 0) {
+    badges.push(`⭐ ${formatNumber(skill.stars)}`);
+  }
+  
+  if (skill.downloads !== undefined && skill.downloads > 0) {
+    badges.push(`📦 ${formatNumber(skill.downloads)}`);
+  }
+  
+  return badges.length > 0 ? ` [${badges.join(' · ')}]` : '';
+}
+
+/**
+ * Format skill signals for partial skill objects (from recommendations)
+ */
+function formatSkillSignals(skill: { 
+  verified?: boolean; 
+  stars?: number; 
+  downloads?: number;
+}): string {
+  const badges: string[] = [];
+  
+  if (skill.verified) {
+    badges.push('✓');
+  }
+  
+  if (skill.stars !== undefined && skill.stars > 0) {
+    badges.push(`⭐${formatNumber(skill.stars)}`);
+  }
+  
+  if (skill.downloads !== undefined && skill.downloads > 0) {
+    badges.push(`📦${formatNumber(skill.downloads)}`);
+  }
+  
+  return badges.length > 0 ? ` [${badges.join(' ')}]` : '';
+}
+
+/**
+ * Format compatibility matrix
+ */
+function formatCompatibility(compat?: SkillCompatibility): string {
+  if (!compat) return '';
+  
+  const agents: string[] = [];
+  if (compat.claude) agents.push('Claude');
+  if (compat.copilot) agents.push('Copilot');
+  if (compat.codex) agents.push('Codex');
+  if (compat.v0) agents.push('v0');
+  
+  return agents.length > 0 ? ` (${agents.join(', ')})` : '';
+}
+
+/**
+ * Format large numbers (e.g., 15420 -> 15.4k)
+ */
+function formatNumber(num: number): string {
+  if (num >= 1000000) {
+    return (num / 1000000).toFixed(1) + 'm';
+  }
+  if (num >= 1000) {
+    return (num / 1000).toFixed(1) + 'k';
+  }
+  return num.toString();
 }
 
 async function handleSetup(params: SetupParams): Promise<object> {
@@ -408,7 +491,13 @@ async function handleSetup(params: SetupParams): Promise<object> {
         skill: {
           name: skill.name,
           description: skill.description,
-          tags: skill.tags || []
+          tags: skill.tags || [],
+          // Include community signals
+          downloads: skill.downloads,
+          stars: skill.stars,
+          verified: skill.verified,
+          publisher: skill.publisher,
+          compatibility: skill.compatibility
         },
         match_reason: `Matches your ${matchedTech.join(', ')} stack`,
         matched_technologies: matchedTech,
@@ -599,7 +688,14 @@ async function handleSearchSkills(params: SearchSkillsParams): Promise<object[]>
     description: skill.description,
     tags: skill.tags || [],
     triggers: skill.triggers,
-    dependencies: skill.dependencies || []
+    dependencies: skill.dependencies || [],
+    // Community quality signals
+    ...(skill.downloads !== undefined && { downloads: skill.downloads }),
+    ...(skill.stars !== undefined && { stars: skill.stars }),
+    ...(skill.verified !== undefined && { verified: skill.verified }),
+    ...(skill.publisher && { publisher: skill.publisher }),
+    ...(skill.compatibility && { compatibility: skill.compatibility }),
+    ...(skill.repository && { repository: skill.repository })
   }));
 }
 
@@ -909,7 +1005,8 @@ function formatSetupResult(result: any): string {
     if (highConf.length > 0) {
       output += `**🎯 High Match:**\n`;
       for (const rec of highConf) {
-        output += `- **${rec.skill.name}** - ${rec.skill.description.slice(0, 80)}...\n`;
+        const signals = formatSkillSignals(rec.skill);
+        output += `- **${rec.skill.name}**${signals} - ${rec.skill.description.slice(0, 80)}...\n`;
         output += `  _${rec.match_reason}_\n`;
       }
       output += '\n';
@@ -918,7 +1015,8 @@ function formatSetupResult(result: any): string {
     if (medConf.length > 0) {
       output += `**👍 Good Match:**\n`;
       for (const rec of medConf) {
-        output += `- **${rec.skill.name}** - ${rec.skill.description.slice(0, 80)}...\n`;
+        const signals = formatSkillSignals(rec.skill);
+        output += `- **${rec.skill.name}**${signals} - ${rec.skill.description.slice(0, 80)}...\n`;
         output += `  _${rec.match_reason}_\n`;
       }
       output += '\n';
@@ -927,7 +1025,8 @@ function formatSetupResult(result: any): string {
     if (lowConf.length > 0) {
       output += `**🔎 Possible Match:**\n`;
       for (const rec of lowConf.slice(0, 3)) { // Limit low confidence
-        output += `- **${rec.skill.name}** - ${rec.skill.description.slice(0, 80)}...\n`;
+        const signals = formatSkillSignals(rec.skill);
+        output += `- **${rec.skill.name}**${signals} - ${rec.skill.description.slice(0, 80)}...\n`;
       }
       output += '\n';
     }

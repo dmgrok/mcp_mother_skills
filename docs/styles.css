@@ -1095,6 +1095,107 @@ section {
     position: relative;
 }
 
+/* ===== Community Roadmap Section ===== */
+.community-roadmap {
+    background: var(--color-bg);
+    padding: 100px 24px;
+}
+
+.roadmap-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+@media (max-width: 900px) {
+    .roadmap-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.roadmap-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+}
+
+.roadmap-icon {
+    font-size: 2.5rem;
+    margin-bottom: 16px;
+}
+
+.roadmap-card h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--color-text);
+}
+
+.roadmap-card > p {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+    margin-bottom: 20px;
+}
+
+.roadmap-features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 20px 0;
+    flex-grow: 1;
+}
+
+.roadmap-features li {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    padding: 8px 0;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.roadmap-features li:last-child {
+    border-bottom: none;
+}
+
+.roadmap-features code {
+    font-size: 0.8125rem;
+    background: var(--color-bg);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.roadmap-status {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 6px 12px;
+    border-radius: 50px;
+    align-self: flex-start;
+}
+
+.roadmap-status.planned {
+    background: rgba(99, 102, 241, 0.15);
+    color: var(--color-primary);
+}
+
+.roadmap-status.in-progress {
+    background: rgba(245, 158, 11, 0.15);
+    color: #f59e0b;
+}
+
+.roadmap-status.done {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--color-accent-green);
+}
+
+.roadmap-card .btn {
+    align-self: flex-start;
+}
+
 /* ===== Footer ===== */
 .footer {
     background: var(--color-bg-secondary);
@@ -1823,6 +1924,53 @@ section {
 .repo-desc {
     font-size: 0.75rem;
     color: var(--color-text-muted);
+}
+
+/* ===== Custom Registry Section ===== */
+.custom-registry {
+    margin-top: 48px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+}
+
+.custom-registry h3 {
+    font-size: 1.25rem;
+    margin-bottom: 12px;
+}
+
+.custom-registry > p {
+    color: var(--color-text-secondary);
+    margin-bottom: 20px;
+}
+
+.custom-registry pre {
+    background: var(--color-bg);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    margin-bottom: 20px;
+    overflow-x: auto;
+}
+
+.custom-registry code {
+    font-size: 0.8125rem;
+    line-height: 1.7;
+    color: var(--color-text-secondary);
+}
+
+.registry-benefits {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+}
+
+.benefit-item {
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+    padding: 8px 12px;
+    background: var(--color-bg);
+    border-radius: var(--radius-sm);
 }
 
 /* ===== Skill Management Section ===== */

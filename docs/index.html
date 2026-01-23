@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mother MCP Skills - Dynamic AI Agent Skill Provisioning</title>
-    <meta name="description" content="Automatically provision the right AI skills for your project. Works with Claude, GitHub Copilot, and OpenAI Codex.">
+    <meta name="description" content="The npm for AI skills. Automatically provision the right AI skills for your project. Works with Claude, GitHub Copilot, and OpenAI Codex.">
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -37,9 +37,9 @@
         </nav>
         
         <div class="hero-content">
-            <div class="hero-badge">Model Context Protocol Server</div>
+            <div class="hero-badge">The npm for AI Skills</div>
             <h1>Stop Configuring AI Skills.<br>Start Building.</h1>
-            <p class="hero-subtitle">One command gives your AI assistant perfect context for your stack. No manual config. No context switching. Just <code>setup</code> and code.</p>
+            <p class="hero-subtitle">Just like npm installs the right packages, Mother MCP installs the right AI skills for your stack. No manual config. No context switching. Just <code>setup</code> and code.</p>
             
             <div style="margin: 2rem auto; max-width: 600px; padding: 1rem 1.5rem; background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 8px;">
                 <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem; text-align: center;">Quick Install via Claude Code Plugin</div>
@@ -806,6 +806,26 @@
                     </a>
                 </div>
             </div>
+            
+            <div class="custom-registry">
+                <h3>🏢 Bring Your Own Registry</h3>
+                <p>Want skills tailored for your organization? The registry URL is fully configurable:</p>
+                <pre><code class="language-yaml"># .mcp/mother/config.yaml
+registry:
+  # Use your company's private registry
+  - url: "https://skills.yourcompany.com/catalog.json"
+    priority: 1
+  
+  # Optionally keep the public registry as fallback
+  - url: "https://cdn.jsdelivr.net/gh/dmgrok/agent_skills_directory@main/catalog.json"
+    priority: 2</code></pre>
+                <div class="registry-benefits">
+                    <div class="benefit-item">✅ Curate skills for your organization's stack</div>
+                    <div class="benefit-item">✅ Add proprietary skills with internal knowledge</div>
+                    <div class="benefit-item">✅ Control what skills are available to teams</div>
+                    <div class="benefit-item">✅ Version and audit through your infrastructure</div>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -1427,6 +1447,57 @@ skills are loaded.</code></pre>
                     <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
                     View on GitHub
                 </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Community Roadmap Section -->
+    <section id="community" class="community-roadmap">
+        <div class="container">
+            <div class="section-header">
+                <h2>Community & Roadmap</h2>
+                <p>Building the npm for AI skills — together.</p>
+            </div>
+            
+            <div class="roadmap-grid">
+                <div class="roadmap-card">
+                    <div class="roadmap-icon">⭐</div>
+                    <h3>Quality Signals</h3>
+                    <p>Coming soon: Skill ratings, download counts, verified publishers, and reviews from the community.</p>
+                    <ul class="roadmap-features">
+                        <li>⭐ Upvote/downvote skills</li>
+                        <li>📊 Download/install counts</li>
+                        <li>✓ Verified publisher badges</li>
+                        <li>💬 Reviews & use cases</li>
+                    </ul>
+                    <span class="roadmap-status planned">Planned</span>
+                </div>
+                
+                <div class="roadmap-card">
+                    <div class="roadmap-icon">📤</div>
+                    <h3>Easy Publishing</h3>
+                    <p>Publish your skills to the registry with a simple CLI command. Templates and guides included.</p>
+                    <ul class="roadmap-features">
+                        <li>📤 <code>mother publish</code> CLI</li>
+                        <li>📦 Skill templates</li>
+                        <li>🔀 Fork & customize</li>
+                        <li>📚 Curated collections</li>
+                    </ul>
+                    <span class="roadmap-status planned">Planned</span>
+                </div>
+                
+                <div class="roadmap-card">
+                    <div class="roadmap-icon">🤝</div>
+                    <h3>How You Can Help</h3>
+                    <p>Join us in building the best AI skills ecosystem. Every contribution matters.</p>
+                    <ul class="roadmap-features">
+                        <li>⭐ Star useful skills</li>
+                        <li>🐛 Report outdated advice</li>
+                        <li>✨ Contribute new skills</li>
+                        <li>💡 Share your use cases</li>
+                    </ul>
+                    <a href="https://github.com/dmgrok/mcp_mother_skills/issues" class="btn btn-outline btn-sm" target="_blank">Join the Discussion</a>
+                </div>
             </div>
         </div>
     </section>
