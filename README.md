@@ -298,8 +298,13 @@ Mother MCP fetches skills from the [Agent Skills Directory](https://github.com/d
 | Provider | Repository | Skills |
 |----------|------------|--------|
 | Anthropic | [anthropics/skills](https://github.com/anthropics/skills) | 16 |
-| OpenAI | [openai/skills](https://github.com/openai/skills) | 10 |
-| GitHub | [github/awesome-copilot](https://github.com/github/awesome-copilot) | 3 |
+| GitHub | [github/awesome-copilot](https://github.com/github/awesome-copilot) | 26 |
+| OpenAI | [openai/skills](https://github.com/openai/skills) | 12 |
+| HuggingFace | [huggingface/skills](https://github.com/huggingface/skills) | 8 |
+| Vercel | [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills) | 3 |
+| SkillCreator.ai | [skillcreatorai/Ai-Agent-Skills](https://github.com/skillcreatorai/Ai-Agent-Skills) | 47 |
+
+**Total: 112 skills** across documents, creative, development, data, enterprise, integrations, and other categories.
 
 ### Available Skills
 
