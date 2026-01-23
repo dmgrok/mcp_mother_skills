@@ -4,6 +4,37 @@
 
 > *Just like npm discovers and installs the packages you need, Mother MCP discovers and installs the AI skills your project needs.*
 
+## How It Works
+
+Mother MCP is a **consumer** of the [agent_skills_directory](https://github.com/dmgrok/agent_skills_directory) — the central catalog of AI skills from providers like Anthropic, OpenAI, GitHub, Vercel, and the community.
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                   agent_skills_directory                        │
+│  The canonical source of AI skills (112+ skills, 6 providers)   │
+│  • GitHub stars, downloads, verification status                 │
+│  • Skill metadata, provider info, compatibility                 │
+└────────────────────────────┬────────────────────────────────────┘
+                             │ fetches catalog
+                             ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                        Mother MCP                               │
+│  Consumer & Reporter - detects your stack, installs skills      │
+│  • Reads quality signals from registry (not generates them)     │
+│  • Downloads skills to .github/skills, .claude/skills, etc.     │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Mother MCP does NOT:**
+- Generate download counts or star ratings
+- Host or maintain the skill registry
+- Track usage analytics
+
+**Mother MCP DOES:**
+- Consume the catalog and display skill metadata
+- Match skills to your detected tech stack
+- Install skills to the right location for your AI agent
+
 ## Demo
 
 > **Coming Soon**: Interactive demo showing automatic skill detection and installation in seconds.
@@ -295,12 +326,36 @@ This will permanently delete all installed skills. After resetting, run `setup` 
 | `get_project_context` | View detected stack and installed skills |
 | `get_agent_info` | See which agent is detected (Claude/Copilot/Codex) |
 | `search_skills` | Search for available skills |
+| `list_bundles` | **NEW** List curated skill bundles by use case |
+| `install_bundle` | **NEW** Install a complete skill bundle at once |
 | `install_skill` | Manually install a skill |
 | `uninstall_skill` | Remove a skill |
 | `check_updates` | Check for skill updates |
 | `set_agent_preference` | Set preferred agent (auto/claude/copilot/codex/both) |
 | `redetect` | Re-scan project files |
 | `reset_skills` | **Reset all skills** - Remove all installed skills and optionally clear config |
+
+### Skill Bundles
+
+Bundles are curated collections of skills for common development use cases. Instead of installing skills one by one, get a complete stack with one command:
+
+```
+> list_bundles
+
+📦 Available Bundles:
+⚛️  frontend-react      - Modern React development with TypeScript and testing
+🚀 fullstack-nextjs    - Complete Next.js stack with database and deployment
+🐍 api-python          - FastAPI with async patterns and PostgreSQL
+🐳 devops-docker       - Containerization with GitHub Actions deployment
+🧪 testing-frontend    - Unit, integration, and E2E testing for web apps
+```
+
+```
+> install_bundle fullstack-nextjs
+
+🚀 Full-Stack Next.js: 7 installed, 0 already present
+   ✅ nextjs, react, typescript, prisma, postgresql, docker, github-actions
+```
 
 ## Project Configuration
 

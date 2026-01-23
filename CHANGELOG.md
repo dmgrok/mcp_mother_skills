@@ -8,21 +8,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- **Community quality signals** - Registry catalog now supports metadata for skill discovery
-  - `downloads`: Install count (updated by registry maintainer)
-  - `stars`: GitHub stars passthrough from source repository
-  - `verified`: Publisher verification badge
-  - `publisher`: Publisher info with name, URL, and verification status
-  - `compatibility`: Agent compatibility matrix (Claude, Copilot, Codex, v0)
-  - `repository`: Source repository URL for linking
-- Quality signals displayed in `setup` recommendations with badges (✓, ⭐, 📦)
-- Quality signals included in `search_skills` results
+- **Skill bundles from agent_skills_directory** - Curated collections now fetched from the central registry
+  - `list_bundles` tool to browse available bundles by query or tags
+  - `install_bundle` tool to install all skills in a bundle at once
+  - Bundles fetched from: `https://cdn.jsdelivr.net/gh/dmgrok/agent_skills_directory@main/bundles.json`
+  - 18 curated bundles: frontend, fullstack, backend, MCP/AI, testing, devops, documents, enterprise, data, creative
+  - New `SkillBundle` TypeScript interface with id, name, description, skills, use_cases, icon, tags, category
+  - Bundle caching with `bundles-cache.json` for offline support
+- **Community quality signals** - Registry catalog includes metadata for skill discovery
+  - Mother MCP **consumes** quality signals from the registry (does NOT generate them)
+  - `downloads`, `stars`, `verified`, `publisher`, `compatibility` fields read from catalog
+  - Quality signals displayed in `setup` recommendations with badges (✓, ⭐, 📦)
 - New `SkillPublisher` and `SkillCompatibility` TypeScript interfaces
-- Documentation for registry catalog format with community fields
+- PR contribution files for agent_skills_directory in `contrib/` folder
 
 ### Changed
-- `RegistrySkill` interface extended with optional community fields
-- Updated example registry.yaml with sample community metadata
+- **Bundles moved to agent_skills_directory** - Mother MCP no longer defines bundles locally
+  - Bundles are now a community resource in the central registry
+  - RegistryClient fetches bundles from `BUNDLES_URL` instead of registry index
+  - Added `loadBundlesCache()` and `saveBundlesCache()` methods
+- **Clarified Mother MCP's role as a consumer** - Updated types.ts and README to explain:
+  - Quality signals (stars, downloads, verified) come FROM the agent_skills_directory
+  - Mother MCP fetches and displays registry data, but does not track usage analytics
+  - The canonical skill registry is https://github.com/dmgrok/agent_skills_directory
+- Simplified examples/registry.yaml to point to directory sources
 
 ## [0.2.1] - 2026-01-23
 

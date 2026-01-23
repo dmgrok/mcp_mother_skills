@@ -27,7 +27,8 @@ import {
   AgentId,
   RegistrySkill,
   SkillPublisher,
-  SkillCompatibility
+  SkillCompatibility,
+  SkillBundle
 } from './types.js';
 import { AgentDetector } from './agent-detector.js';
 import { ProjectDetector } from './project-detector.js';
@@ -249,6 +250,42 @@ Use after preview_sync to apply approved changes. You can:
         }
       },
       required: ['skill_name']
+    }
+  },
+  {
+    name: 'list_bundles',
+    description: `List available skill bundles (curated collections for common use cases).
+Bundles group related skills together for quick setup of complete development stacks.
+Examples: "Full-Stack Next.js", "Python API", "DevOps Docker & CI/CD"`,
+    inputSchema: {
+      type: 'object',
+      properties: {
+        query: {
+          type: 'string',
+          description: 'Search term to filter bundles by name, description, or use case'
+        },
+        tags: {
+          type: 'array',
+          items: { type: 'string' },
+          description: 'Filter by tags (e.g., "frontend", "backend", "devops", "fullstack")'
+        }
+      }
+    }
+  },
+  {
+    name: 'install_bundle',
+    description: `Install a curated skill bundle by ID.
+This installs all skills in the bundle at once for a complete development stack.
+Use list_bundles to see available bundles and their IDs.`,
+    inputSchema: {
+      type: 'object',
+      properties: {
+        bundle_id: {
+          type: 'string',
+          description: 'ID of the bundle to install (e.g., "fullstack-nextjs", "api-python")'
+        }
+      },
+      required: ['bundle_id']
     }
   },
   {
@@ -697,6 +734,84 @@ async function handleSearchSkills(params: SearchSkillsParams): Promise<object[]>
     ...(skill.compatibility && { compatibility: skill.compatibility }),
     ...(skill.repository && { repository: skill.repository })
   }));
+}
+
+// Bundle parameter types
+interface ListBundlesParams {
+  query?: string;
+  tags?: string[];
+}
+
+interface InstallBundleParams {
+  bundle_id: string;
+}
+
+async function handleListBundles(params: ListBundlesParams): Promise<object[]> {
+  const bundles = await registryClient.searchBundles(params.query, params.tags);
+  
+  return bundles.map(bundle => ({
+    id: bundle.id,
+    name: bundle.name,
+    icon: bundle.icon || '📦',
+    description: bundle.description,
+    skills: bundle.skills,
+    use_cases: bundle.use_cases,
+    tags: bundle.tags || [],
+    ...(bundle.downloads !== undefined && { downloads: bundle.downloads }),
+    ...(bundle.verified !== undefined && { verified: bundle.verified })
+  }));
+}
+
+async function handleInstallBundle(params: InstallBundleParams): Promise<object> {
+  const bundle = await registryClient.getBundle(params.bundle_id);
+  
+  if (!bundle) {
+    return {
+      success: false,
+      error: `Bundle "${params.bundle_id}" not found in registry`
+    };
+  }
+
+  const installed: string[] = [];
+  const failed: string[] = [];
+  const alreadyInstalled: string[] = [];
+
+  // Get currently installed skills
+  const currentSkills = await skillInstaller.getInstalledSkills();
+  const installedNames = new Set(currentSkills.map(s => s.name));
+
+  // Install each skill in the bundle
+  for (const skillName of bundle.skills) {
+    if (installedNames.has(skillName)) {
+      alreadyInstalled.push(skillName);
+      continue;
+    }
+
+    try {
+      const result = await skillInstaller.installSkillByName(skillName);
+      if (result) {
+        installed.push(skillName);
+        await configManager.addManualSkill(skillName);
+      } else {
+        failed.push(skillName);
+      }
+    } catch (error) {
+      failed.push(skillName);
+    }
+  }
+
+  return {
+    success: failed.length === 0,
+    bundle: {
+      id: bundle.id,
+      name: bundle.name,
+      icon: bundle.icon
+    },
+    installed,
+    already_installed: alreadyInstalled,
+    failed: failed.length > 0 ? failed : undefined,
+    summary: `${bundle.icon || '📦'} ${bundle.name}: ${installed.length} installed, ${alreadyInstalled.length} already present${failed.length > 0 ? `, ${failed.length} failed` : ''}`
+  };
 }
 
 async function handleInstallSkill(params: InstallSkillParams): Promise<object> {
@@ -1188,6 +1303,14 @@ async function main(): Promise<void> {
 
         case 'search_skills':
           result = await handleSearchSkills((args || {}) as SearchSkillsParams);
+          break;
+
+        case 'list_bundles':
+          result = await handleListBundles((args || {}) as ListBundlesParams);
+          break;
+
+        case 'install_bundle':
+          result = await handleInstallBundle(args as unknown as InstallBundleParams);
           break;
 
         case 'install_skill':

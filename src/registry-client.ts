@@ -1,10 +1,24 @@
 /**
- * Registry Client - Fetches skills from GitHub registries
+ * Registry Client - Fetches skills and bundles from GitHub registries
+ * 
+ * Skills and bundles are consumed from the agent_skills_directory:
+ * - Skills: https://cdn.jsdelivr.net/gh/dmgrok/agent_skills_directory@main/catalog.json
+ * - Bundles: https://cdn.jsdelivr.net/gh/dmgrok/agent_skills_directory@main/bundles.json
  */
 
 import * as fs from 'fs/promises';
 import * as path from 'path';
-import { RegistrySource, RegistryIndex, RegistrySkill } from './types.js';
+import { RegistrySource, RegistryIndex, RegistrySkill, SkillBundle } from './types.js';
+
+// Bundles URL from the agent_skills_directory
+const BUNDLES_URL = 'https://cdn.jsdelivr.net/gh/dmgrok/agent_skills_directory@main/bundles.json';
+
+interface BundlesIndex {
+  version: string;
+  generated_at: string;
+  total_bundles: number;
+  bundles: SkillBundle[];
+}
 
 interface GitHubContent {
   name: string;
@@ -21,10 +35,16 @@ interface CachedRegistry {
   index: RegistryIndex;
 }
 
+interface CachedBundles {
+  fetched_at: string;
+  bundles: SkillBundle[];
+}
+
 export class RegistryClient {
   private registries: RegistrySource[];
   private cachePath: string;
   private cacheMaxAgeDays: number;
+  private cachedBundles: SkillBundle[] | null = null;
 
   constructor(
     registries: RegistrySource[],
@@ -68,6 +88,130 @@ export class RegistryClient {
     }
 
     return allSkills;
+  }
+
+  /**
+   * Get all bundles from the agent_skills_directory
+   * Fetches from: https://cdn.jsdelivr.net/gh/dmgrok/agent_skills_directory@main/bundles.json
+   */
+  async getAllBundles(forceRefresh: boolean = false): Promise<SkillBundle[]> {
+    // Return cached bundles if available and not forcing refresh
+    if (this.cachedBundles && !forceRefresh) {
+      return this.cachedBundles;
+    }
+
+    // Try to load from disk cache
+    if (!forceRefresh) {
+      const cached = await this.loadBundlesCache();
+      if (cached) {
+        this.cachedBundles = cached;
+        return cached;
+      }
+    }
+
+    // Fetch from the bundles URL
+    try {
+      const response = await fetch(BUNDLES_URL, {
+        headers: {
+          'Accept': 'application/json',
+          'User-Agent': 'mcp-mother-skills'
+        }
+      });
+
+      if (!response.ok) {
+        console.error(`Failed to fetch bundles: ${response.status}`);
+        return [];
+      }
+
+      const data = await response.json() as BundlesIndex;
+      this.cachedBundles = data.bundles || [];
+      
+      // Save to cache
+      await this.saveBundlesCache(this.cachedBundles);
+      
+      return this.cachedBundles;
+    } catch (error) {
+      console.error('Failed to fetch bundles from agent_skills_directory:', error);
+      return [];
+    }
+  }
+
+  /**
+   * Load bundles from disk cache
+   */
+  private async loadBundlesCache(): Promise<SkillBundle[] | null> {
+    try {
+      const cachePath = path.join(this.cachePath, 'bundles-cache.json');
+      const content = await fs.readFile(cachePath, 'utf-8');
+      const cached = JSON.parse(content) as CachedBundles;
+      
+      // Check if cache is still valid
+      const cacheAge = Date.now() - new Date(cached.fetched_at).getTime();
+      const maxAge = this.cacheMaxAgeDays * 24 * 60 * 60 * 1000;
+      
+      if (cacheAge < maxAge) {
+        return cached.bundles;
+      }
+    } catch {
+      // Cache doesn't exist or is invalid
+    }
+    return null;
+  }
+
+  /**
+   * Save bundles to disk cache
+   */
+  private async saveBundlesCache(bundles: SkillBundle[]): Promise<void> {
+    try {
+      await fs.mkdir(this.cachePath, { recursive: true });
+      const cachePath = path.join(this.cachePath, 'bundles-cache.json');
+      const cached: CachedBundles = {
+        fetched_at: new Date().toISOString(),
+        bundles
+      };
+      await fs.writeFile(cachePath, JSON.stringify(cached, null, 2));
+    } catch (error) {
+      console.error('Failed to save bundles cache:', error);
+    }
+  }
+
+  /**
+   * Get a specific bundle by ID
+   */
+  async getBundle(id: string): Promise<SkillBundle | null> {
+    const bundles = await this.getAllBundles();
+    return bundles.find(b => b.id === id) || null;
+  }
+
+  /**
+   * Search bundles by query and/or tags
+   */
+  async searchBundles(query?: string, tags?: string[]): Promise<SkillBundle[]> {
+    const allBundles = await this.getAllBundles();
+    
+    return allBundles.filter(bundle => {
+      // Query match
+      if (query) {
+        const queryLower = query.toLowerCase();
+        const matchesQuery = 
+          bundle.id.toLowerCase().includes(queryLower) ||
+          bundle.name.toLowerCase().includes(queryLower) ||
+          bundle.description.toLowerCase().includes(queryLower) ||
+          bundle.use_cases.some(uc => uc.toLowerCase().includes(queryLower));
+        if (!matchesQuery) return false;
+      }
+
+      // Tags match
+      if (tags && tags.length > 0) {
+        const bundleTags = bundle.tags || [];
+        const matchesTags = tags.some(tag => 
+          bundleTags.includes(tag.toLowerCase())
+        );
+        if (!matchesTags) return false;
+      }
+
+      return true;
+    });
   }
 
   /**
