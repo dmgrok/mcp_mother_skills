@@ -37,7 +37,26 @@ Mother MCP automatically:
 
 ## Installation
 
-### Quick Install via npm (Recommended)
+### Claude Code Plugin (Easiest)
+
+Install via Claude Code's plugin marketplace:
+
+```bash
+# Add the marketplace
+/plugin marketplace add dmgrok/mcp_mother_skills
+
+# Install the plugin
+/plugin install mother-mcp@mother-mcp-marketplace
+```
+
+Or install directly from GitHub:
+```bash
+/plugin install dmgrok/mcp_mother_skills
+```
+
+Once installed, the Mother MCP server will be available in Claude Code.
+
+### Quick Install via npm
 
 ```bash
 # Install globally

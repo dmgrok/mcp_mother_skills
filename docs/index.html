@@ -41,9 +41,14 @@
             <h1>Stop Configuring AI Skills.<br>Start Building.</h1>
             <p class="hero-subtitle">One command gives your AI assistant perfect context for your stack. No manual config. No context switching. Just <code>setup</code> and code.</p>
             
-            <div style="margin: 2rem auto; max-width: 500px; padding: 1rem 1.5rem; background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 8px;">
-                <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem; text-align: center;">Quick Install via NPM</div>
-                <code style="display: block; text-align: center; color: var(--accent); font-size: 1rem;">npm install -g mcp-mother-skills</code>
+            <div style="margin: 2rem auto; max-width: 600px; padding: 1rem 1.5rem; background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 8px;">
+                <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem; text-align: center;">Quick Install via Claude Code Plugin</div>
+                <code style="display: block; text-align: center; color: var(--accent); font-size: 0.9rem; margin-bottom: 0.5rem;">/plugin marketplace add dmgrok/mcp_mother_skills</code>
+                <code style="display: block; text-align: center; color: var(--accent); font-size: 0.9rem;">/plugin install mother-mcp@mother-mcp-marketplace</code>
+                <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(99, 102, 241, 0.2); text-align: center;">
+                    <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem;">Or via NPM</div>
+                    <code style="display: block; text-align: center; color: var(--accent); font-size: 0.9rem;">npm install -g mcp-mother-skills</code>
+                </div>
             </div>
             
             <div class="hero-stats">
@@ -872,8 +877,20 @@
                 <div class="setup-step">
                     <h3>1. Install</h3>
                     
-                    <h4 style="margin-top: 1.5rem; margin-bottom: 0.5rem; color: var(--text-secondary); font-size: 1rem;">Recommended: NPM Package</h4>
-                    <p style="margin-bottom: 1rem; color: var(--text-muted);">Easiest way to get started — no manual builds required:</p>
+                    <h4 style="margin-top: 1.5rem; margin-bottom: 0.5rem; color: var(--text-secondary); font-size: 1rem;">Recommended: Claude Code Plugin</h4>
+                    <p style="margin-bottom: 1rem; color: var(--text-muted);">Easiest way to get started in Claude Code:</p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">bash</span>
+                            <button class="copy-btn" data-code="/plugin marketplace add dmgrok/mcp_mother_skills
+/plugin install mother-mcp@mother-mcp-marketplace">Copy</button>
+                        </div>
+                        <pre><code>/plugin marketplace add dmgrok/mcp_mother_skills
+/plugin install mother-mcp@mother-mcp-marketplace</code></pre>
+                    </div>
+                    
+                    <h4 style="margin-top: 2rem; margin-bottom: 0.5rem; color: var(--text-secondary); font-size: 1rem;">Alternative: NPM Package</h4>
+                    <p style="margin-bottom: 1rem; color: var(--text-muted);">For manual configuration or other agents:</p>
                     <div class="code-block">
                         <div class="code-header">
                             <span class="code-lang">bash</span>
@@ -890,7 +907,7 @@ npm install -g mcp-mother-skills
 npx mcp-mother-skills</code></pre>
                     </div>
                     
-                    <h4 style="margin-top: 2rem; margin-bottom: 0.5rem; color: var(--text-secondary); font-size: 1rem;">Alternative: Build from Source</h4>
+                    <h4 style="margin-top: 2rem; margin-bottom: 0.5rem; color: var(--text-secondary); font-size: 1rem;">For Developers: Build from Source</h4>
                     <p style="margin-bottom: 1rem; color: var(--text-muted);">For development or custom modifications:</p>
                     <div class="code-block">
                         <div class="code-header">
