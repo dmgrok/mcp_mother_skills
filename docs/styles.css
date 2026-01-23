@@ -2402,3 +2402,238 @@ section {
         grid-template-columns: 1fr;
     }
 }
+
+/* ===== Bundles Section ===== */
+.bundles-section {
+    padding: 80px 0;
+    background: var(--color-bg-secondary);
+}
+
+.bundles-intro {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-bottom: 48px;
+}
+
+.bundle-benefit {
+    display: flex;
+    gap: 16px;
+    padding: 24px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+}
+
+.bundle-benefit .benefit-icon {
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+
+.bundle-benefit h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: 8px;
+}
+
+.bundle-benefit p {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+}
+
+.bundle-benefit a {
+    color: var(--color-primary-light);
+}
+
+.bundles-showcase {
+    margin-bottom: 48px;
+}
+
+.bundles-showcase h3,
+.bundles-usage h3,
+.bundle-categories h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.bundles-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.bundle-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    transition: all var(--transition-normal);
+}
+
+.bundle-card:hover {
+    border-color: var(--color-primary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.bundle-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.bundle-icon {
+    font-size: 1.75rem;
+    flex-shrink: 0;
+}
+
+.bundle-header h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text);
+    font-family: var(--font-mono);
+}
+
+.bundle-category {
+    display: inline-block;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-primary-light);
+    background: rgba(124, 92, 255, 0.15);
+    padding: 2px 8px;
+    border-radius: var(--radius-sm);
+    margin-top: 4px;
+}
+
+.bundle-card > p {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 16px;
+    line-height: 1.5;
+}
+
+.bundle-skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.skill-chip {
+    font-size: 0.75rem;
+    font-family: var(--font-mono);
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-muted);
+    padding: 4px 8px;
+    border-radius: var(--radius-sm);
+}
+
+.bundles-usage {
+    margin-bottom: 48px;
+}
+
+.usage-steps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.usage-step {
+    text-align: center;
+    max-width: 220px;
+}
+
+.usage-step .step-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-primary-light);
+    margin-bottom: 12px;
+}
+
+.usage-step .code-block {
+    margin-bottom: 12px;
+}
+
+.usage-step .code-block.small pre {
+    padding: 12px 16px;
+    font-size: 0.8125rem;
+}
+
+.usage-step p {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+}
+
+.usage-arrow {
+    font-size: 1.5rem;
+    color: var(--color-text-muted);
+}
+
+.bundle-categories {
+    text-align: center;
+}
+
+.category-tags {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.category-tag {
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding: 8px 16px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 20px;
+    color: var(--color-text-secondary);
+    transition: all var(--transition-fast);
+}
+
+.category-tag:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary-light);
+}
+
+.category-note {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+}
+
+.category-note a {
+    color: var(--color-primary-light);
+}
+
+@media (max-width: 900px) {
+    .bundles-intro {
+        grid-template-columns: 1fr;
+    }
+    
+    .bundles-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .usage-steps {
+        flex-direction: column;
+    }
+    
+    .usage-arrow {
+        transform: rotate(90deg);
+    }
+}
+
+@media (max-width: 600px) {
+    .bundles-grid {
+        grid-template-columns: 1fr;
+    }
+}

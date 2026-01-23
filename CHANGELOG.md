@@ -21,6 +21,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Quality signals displayed in `setup` recommendations with badges (✓, ⭐, 📦)
 - New `SkillPublisher` and `SkillCompatibility` TypeScript interfaces
 - PR contribution files for agent_skills_directory in `contrib/` folder
+- **Bundle tests** - Comprehensive test coverage for bundle functionality
+  - `getAllBundles()` - fetch, cache, and error handling tests
+  - `getBundle()` - specific bundle lookup tests
+  - `searchBundles()` - query and tag filter tests
+- **Docs site bundles section** - New "Bundles" section in docs/index.html
+  - Featured bundles showcase with skill previews
+  - Usage instructions (list → search → install)
+  - Category tags and navigation link
 
 ### Changed
 - **Bundles moved to agent_skills_directory** - Mother MCP no longer defines bundles locally
