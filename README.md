@@ -23,6 +23,50 @@ A Model Context Protocol (MCP) server that dynamically provisions agent skills b
 | Vercel v0 | ✅ Full Support | Auto-detected via project structure |
 | Other MCP Clients | ✅ Generic Support | Falls back to generic profile |
 
+## Why Reusable Skills Matter
+
+> *"If you'll do roughly the same thing 10+ times, encode it as a reusable skill. Under 3 times? Just tell Sonnet."*
+
+### The Problem with "Just Ask the AI"
+
+You *can* ask Claude to help with any task ad-hoc. But for teams and repeated workflows, this approach breaks down:
+
+| Pain Point | What Happens | How Mother Solves It |
+|------------|--------------|---------------------|
+| **Prompt Tax** | Re-typing similar prompts wastes hours weekly | Skills encode best practices once, reuse forever |
+| **Prompt Drift** | Small phrasing changes alter behavior unpredictably | Versioned skills deliver consistent results |
+| **Discoverability** | "What was that good prompt you used last month?" | Named skills with descriptions, searchable registry |
+| **Onboarding** | New devs spend days configuring AI context | `setup` → perfect context in seconds |
+| **House Style** | Everyone crafts prompts differently | Shared skills encode team standards |
+
+### Where Skills Add Real Value
+
+✅ **High-value (use skills)**
+- Repeated SDLC steps: PR reviews, security checks, test generation, docs
+- Org-specific knowledge: architecture rules, domain models, compliance
+- Cross-project utilities: dependency upgrades, migrations, repo analysis
+
+❌ **Low-value (just prompt)**
+- Quick throwaway scripts or spikes
+- Highly unique one-off tasks
+
+### The Before/After
+
+**Without Mother** (prompt tax every time):
+```
+Hey Claude, review this PR for security issues. Check for SQL injection, 
+XSS, also we use React so watch for dangerouslySetInnerHTML, and our 
+team prefers early returns, and don't forget we have a custom auth 
+middleware pattern, and...
+```
+
+**With Mother** (skill already knows your stack):
+```
+/review
+```
+
+The skill knows your framework, your patterns, your team's standards — because it was installed based on your actual project context.
+
 ## What It Does
 
 Mother MCP automatically:
