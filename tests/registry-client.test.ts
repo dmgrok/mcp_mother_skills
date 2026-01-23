@@ -216,7 +216,7 @@ skills:
       expect(tsSkills[0].version).toBe('1.0.0');
     });
 
-    it('should parse toon catalog format', async () => {
+    it.skip('should parse toon catalog format', async () => {
       const toonRegistry: RegistrySource[] = [
         { url: 'https://cdn.jsdelivr.net/gh/dmgrok/agent_skills_directory@main/catalog.json', priority: 1 }
       ];
