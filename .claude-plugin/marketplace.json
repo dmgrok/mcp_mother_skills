@@ -1,0 +1,20 @@
+{
+  "name": "mother-mcp-marketplace",
+  "owner": {
+    "name": "dmgrok"
+  },
+  "metadata": {
+    "description": "Mother MCP - AI agent skill provisioning based on project context",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "mother-mcp",
+      "source": "..",
+      "description": "Dynamically provisions AI agent skills based on project tech stack detection",
+      "version": "0.2.1",
+      "category": "productivity",
+      "tags": ["mcp", "skills", "automation", "context"]
+    }
+  ]
+}

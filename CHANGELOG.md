@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-01-23
+
+### Added
+- **Claude Code marketplace distribution** - Plugin can now be installed via Claude Code's plugin marketplace
+  - Added `.claude-plugin/plugin.json` manifest with MCP server configuration
+  - Added `.claude-plugin/marketplace.json` catalog for marketplace hosting
+  - Users can install with `/plugin marketplace add dmgrok/mcp_mother_skills`
+
 ## [0.2.0] - 2026-01-20
 
 ### Added

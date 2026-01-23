@@ -1,6 +1,6 @@
 {
   "name": "mcp-mother-skills",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "MCP server that dynamically provisions agent skills based on project context",
   "type": "module",
   "main": "dist/index.js",

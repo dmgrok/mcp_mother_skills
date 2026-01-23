@@ -1,0 +1,25 @@
+{
+  "name": "mother-mcp",
+  "description": "Dynamically provisions AI agent skills based on project tech stack detection. Scans your project to detect languages, frameworks, databases, and tools, then automatically installs relevant coding guidelines and best practices.",
+  "version": "0.2.1",
+  "author": {
+    "name": "dmgrok"
+  },
+  "homepage": "https://github.com/dmgrok/mcp_mother_skills",
+  "repository": "https://github.com/dmgrok/mcp_mother_skills",
+  "license": "MIT",
+  "keywords": [
+    "mcp",
+    "skills",
+    "context",
+    "tech-stack",
+    "detection",
+    "automation"
+  ],
+  "mcpServers": {
+    "mother-mcp": {
+      "command": "npx",
+      "args": ["-y", "mcp-mother-skills"]
+    }
+  }
+}
