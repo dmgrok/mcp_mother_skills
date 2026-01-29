@@ -12,8 +12,8 @@
     },
     "version": {
       "type": "string",
-      "description": "Bundles schema version (semver)",
-      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+      "description": "Bundles version (YYYY.MM.DD, matches catalog versioning)",
+      "pattern": "^\\d{4}\\.\\d{2}\\.\\d{2}$"
     },
     "generated_at": {
       "type": "string",
@@ -91,7 +91,7 @@
         "category": {
           "type": "string",
           "description": "Bundle category (matches skill categories)",
-          "enum": ["frontend", "fullstack", "backend", "development", "documents", "creative", "enterprise", "data", "other"]
+          "enum": ["creative", "data", "development", "documents", "enterprise", "integrations", "other"]
         }
       }
     }
