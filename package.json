@@ -66,6 +66,21 @@
     "typescript": "^5.3.0",
     "vitest": "^4.1.12"
   },
+  "overrides": {
+    "@specfy/stack-analyser": {
+      "nanoid": "^5.1.16",
+      "yaml": "^2.8.3"
+    },
+    "@actions/http-client": {
+      "undici": "^6.28.1"
+    },
+    "@typescript-eslint/typescript-estree": {
+      "minimatch": "^9.0.7"
+    },
+    "micromatch": {
+      "picomatch": "^2.3.2"
+    }
+  },
   "engines": {
     "node": ">=20.19.0"
   }
