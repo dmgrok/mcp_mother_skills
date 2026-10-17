@@ -93,5 +93,5 @@ For organizations that need more control.
 Have ideas for the roadmap? 
 
 - **Feature requests**: [Open an issue](https://github.com/dmgrok/mcp_mother_skills/issues)
-- **Contribute skills**: [agent_skills_directory](https://github.com/dmgrok/agent_skills_directory)
+- **Contribute skills**: [agent-plugins](https://github.com/dmgrok/agent-plugins)
 - **Discuss**: Share your use cases and what skills would help your workflow

@@ -1,17 +1,17 @@
 # Mother MCP Skills
 
-**The npm for AI agent skills.** A Model Context Protocol (MCP) server that automatically provisions the right skills for your project — across Claude Code, GitHub Copilot, OpenAI Codex, and Vercel v0.
+**The npm for AI agent skills.** A Model Context Protocol (MCP) server that automatically provisions the right skills for your project — across Claude Code, GitHub Copilot, and OpenAI Codex.
 
 > *Just like npm discovers and installs the packages you need, Mother MCP discovers and installs the AI skills your project needs.*
 
 ## How It Works
 
-Mother MCP is a **consumer** of the [agent_skills_directory](https://github.com/dmgrok/agent_skills_directory) — the central catalog of AI skills from providers like Anthropic, OpenAI, GitHub, Vercel, and the community.
+Mother MCP is a **consumer** of [agent-plugins](https://github.com/dmgrok/agent-plugins) — the central catalog of AI skills from providers like Anthropic, OpenAI, GitHub, Vercel, and the community.
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                   agent_skills_directory                        │
-│  The canonical source of AI skills (112+ skills, 6 providers)   │
+│                         agent-plugins                           │
+│  Canonical AI skills catalog, refreshed daily                   │
 │  • GitHub stars, downloads, verification status                 │
 │  • Skill metadata, provider info, compatibility                 │
 └────────────────────────────┬────────────────────────────────────┘
@@ -35,15 +35,10 @@ Mother MCP is a **consumer** of the [agent_skills_directory](https://github.com/
 - Match skills to your detected tech stack
 - Install skills to the right location for your AI agent
 
-## Demo
-
-> **Coming Soon**: Interactive demo showing automatic skill detection and installation in seconds.
-
 ## Resources
 
 📄 **[Full Documentation](https://dmgrok.github.io/mcp_mother_skills/)** — Complete setup guide and feature walkthrough  
-📊 **[Visual Overview (PDF)](docs/MOTHER-MCP-SKILLS.pdf)** — One-page infographic explaining the architecture  
-🎬 **[Video Demo](#)** — Coming soon
+📊 **[Visual Overview (PDF)](docs/MOTHER-MCP-SKILLS.pdf)** — One-page infographic explaining the architecture
 
 ## Supported Agents
 
@@ -53,7 +48,7 @@ Mother MCP is a **consumer** of the [agent_skills_directory](https://github.com/
 | Claude Desktop | ✅ Full Support | Auto-detected via MCP client info |
 | GitHub Copilot | ✅ Full Support | Auto-detected via VS Code environment |
 | OpenAI Codex | ✅ Full Support | Auto-detected via `CODEX_HOME` env var |
-| Vercel v0 | ✅ Full Support | Auto-detected via project structure |
+| Vercel v0 | 🔮 Planned | v0 compatibility is shown in skill details; no install profile yet |
 | Other MCP Clients | ✅ Generic Support | Falls back to generic profile |
 
 ## Why Reusable Skills Matter
@@ -147,8 +142,8 @@ npx mcp-mother-skills
 
 ```bash
 # Clone the repository
-git clone https://github.com/dmgrok/mcp-mother-skills.git
-cd mcp-mother-skills
+git clone https://github.com/dmgrok/mcp_mother_skills.git
+cd mcp_mother_skills
 
 # Install dependencies
 npm install
@@ -378,7 +373,7 @@ agent:
   sync_both: false    # Install to both .github/skills and .claude/skills
 
 registry:
-  - url: "https://cdn.jsdelivr.net/gh/dmgrok/agent_skills_directory@main/catalog.json"
+  - url: "https://cdn.jsdelivr.net/gh/dmgrok/agent-plugins@main/catalog.json"
     priority: 1
 
 cache:
@@ -394,18 +389,18 @@ sync:
 
 ## Skills Registry
 
-Mother MCP fetches skills from the [Agent Skills Directory](https://github.com/dmgrok/agent_skills_directory), an automatically updated catalog aggregating skills from multiple providers:
+Mother MCP fetches skills from [agent-plugins](https://github.com/dmgrok/agent-plugins), an automatically updated catalog aggregating skills from many providers, including:
 
-| Provider | Repository | Skills |
-|----------|------------|--------|
-| Anthropic | [anthropics/skills](https://github.com/anthropics/skills) | 16 |
-| GitHub | [github/awesome-copilot](https://github.com/github/awesome-copilot) | 26 |
-| OpenAI | [openai/skills](https://github.com/openai/skills) | 12 |
-| HuggingFace | [huggingface/skills](https://github.com/huggingface/skills) | 8 |
-| Vercel | [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills) | 3 |
-| SkillCreator.ai | [skillcreatorai/Ai-Agent-Skills](https://github.com/skillcreatorai/Ai-Agent-Skills) | 47 |
+| Provider | Repository |
+|----------|------------|
+| Anthropic | [anthropics/skills](https://github.com/anthropics/skills) |
+| GitHub | [github/awesome-copilot](https://github.com/github/awesome-copilot) |
+| OpenAI | [openai/skills](https://github.com/openai/skills) |
+| HuggingFace | [huggingface/skills](https://github.com/huggingface/skills) |
+| Vercel | [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills) |
+| SkillCreator.ai | [skillcreatorai/Ai-Agent-Skills](https://github.com/skillcreatorai/Ai-Agent-Skills) |
 
-**Total: 112 skills** across documents, creative, development, data, enterprise, integrations, and other categories.
+See the live [catalog.json](https://cdn.jsdelivr.net/gh/dmgrok/agent-plugins@main/catalog.json) for current providers and totals.
 
 ### Bring Your Own Registry
 
@@ -419,7 +414,7 @@ registry:
     priority: 1
   
   # Optionally keep the public registry as fallback
-  - url: "https://cdn.jsdelivr.net/gh/dmgrok/agent_skills_directory@main/catalog.json"
+  - url: "https://cdn.jsdelivr.net/gh/dmgrok/agent-plugins@main/catalog.json"
     priority: 2
 ```
 
@@ -429,7 +424,7 @@ This lets you:
 - **Control what skills are available** to your engineering teams
 - **Version and audit** skills through your own infrastructure
 
-Your private registry just needs to serve a JSON catalog in the same format as the [public catalog](https://cdn.jsdelivr.net/gh/dmgrok/agent_skills_directory@main/catalog.json).
+Your private registry just needs to serve a JSON catalog in the same format as the [public catalog](https://cdn.jsdelivr.net/gh/dmgrok/agent-plugins@main/catalog.json).
 
 ### Registry Catalog Format
 
@@ -484,7 +479,7 @@ These signals are displayed in search results and recommendations to help users 
 
 **Infrastructure**: `azure-role-selector`, `snowflake-semanticview`
 
-The catalog is refreshed automatically. See [catalog.json](https://cdn.jsdelivr.net/gh/dmgrok/agent_skills_directory@main/catalog.json) for the full list.
+The catalog is refreshed daily. See [catalog.json](https://cdn.jsdelivr.net/gh/dmgrok/agent-plugins@main/catalog.json) for the full list.
 
 ## How Skills Are Matched
 
@@ -579,6 +574,8 @@ This connects your static instructions to Mother's dynamic skill system.
 
 ## Development
 
+Requires Node.js 20.19+ (CI runs on Node 20 and 22).
+
 ```bash
 # Run in development mode
 npm run dev
@@ -586,38 +583,22 @@ npm run dev
 # Build
 npm run build
 
+# Run the test suite
+npm test
+
 # Watch mode
 npm run watch
 ```
 
 ## Community & Roadmap
 
-Mother MCP is evolving into a community-driven skill ecosystem — **the npm for AI skills**. Here's what we're building:
-
-### Quality Signals (Coming Soon)
-
-| Feature | Description | Status |
-|---------|-------------|--------|
-| ⭐ **Skill ratings** | Community upvotes/downvotes on skill quality | Planned |
-| 📊 **Download counts** | See how many developers use each skill | Planned |
-| ✓ **Verified publishers** | Trust badges for official sources (Anthropic, GitHub, etc.) | Planned |
-| 💬 **Reviews & use cases** | "Worked great for React 19 + TypeScript" | Planned |
-| 🏷️ **Compatibility matrix** | Works with: Claude ✓, Copilot ✓, Codex ✓ | Planned |
-
-### Contribution Tools (Coming Soon)
-
-| Feature | Description | Status |
-|---------|-------------|--------|
-| 📤 **`mother publish`** | CLI to publish skills to the registry | Planned |
-| 📦 **Skill templates** | Starter templates for common skill types | Planned |
-| 🔀 **Fork & customize** | Base your skill on existing ones | Planned |
-| 📚 **Skill collections** | Curated bundles ("Enterprise Security Pack") | Planned |
+Shipped and planned features (quality signals, publishing tools, enterprise options) are tracked in [ROADMAP.md](ROADMAP.md).
 
 ### How You Can Help
 
 1. **Star skills you find useful** — helps surface quality
 2. **Report issues** with skills that have outdated advice
-3. **Contribute skills** via PR to [agent_skills_directory](https://github.com/dmgrok/agent_skills_directory)
+3. **Contribute skills** via PR to [agent-plugins](https://github.com/dmgrok/agent-plugins)
 4. **Share your use cases** — what skills would help your workflow?
 
 Join the discussion: [GitHub Issues](https://github.com/dmgrok/mcp_mother_skills/issues)
