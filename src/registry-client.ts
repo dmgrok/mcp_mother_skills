@@ -1,17 +1,17 @@
 /**
  * Registry Client - Fetches skills and bundles from GitHub registries
  * 
- * Skills and bundles are consumed from the agent_skills_directory:
- * - Skills: https://cdn.jsdelivr.net/gh/dmgrok/agent_skills_directory@main/catalog.json
- * - Bundles: https://cdn.jsdelivr.net/gh/dmgrok/agent_skills_directory@main/bundles.json
+ * Skills and bundles are consumed from agent-plugins:
+ * - Skills: https://cdn.jsdelivr.net/gh/dmgrok/agent-plugins@main/catalog.json
+ * - Bundles: https://cdn.jsdelivr.net/gh/dmgrok/agent-plugins@main/bundles.json
  */
 
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import { RegistrySource, RegistryIndex, RegistrySkill, SkillBundle } from './types.js';
 
-// Bundles URL from the agent_skills_directory
-const BUNDLES_URL = 'https://cdn.jsdelivr.net/gh/dmgrok/agent_skills_directory@main/bundles.json';
+// Bundles URL from agent-plugins
+const BUNDLES_URL = 'https://cdn.jsdelivr.net/gh/dmgrok/agent-plugins@main/bundles.json';
 
 interface BundlesIndex {
   version: string;
@@ -91,8 +91,8 @@ export class RegistryClient {
   }
 
   /**
-   * Get all bundles from the agent_skills_directory
-   * Fetches from: https://cdn.jsdelivr.net/gh/dmgrok/agent_skills_directory@main/bundles.json
+   * Get all bundles from agent-plugins
+   * Fetches from: https://cdn.jsdelivr.net/gh/dmgrok/agent-plugins@main/bundles.json
    */
   async getAllBundles(forceRefresh: boolean = false): Promise<SkillBundle[]> {
     // Return cached bundles if available and not forcing refresh
@@ -131,7 +131,7 @@ export class RegistryClient {
       
       return this.cachedBundles;
     } catch (error) {
-      console.error('Failed to fetch bundles from agent_skills_directory:', error);
+      console.error('Failed to fetch bundles from agent-plugins:', error);
       return [];
     }
   }

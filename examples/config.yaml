@@ -19,8 +19,8 @@ agent:
 # Skill registries (in priority order)
 registry:
   # Primary: Agent Skills Directory (aggregates Anthropic, OpenAI, GitHub skills)
-  # See: https://github.com/dmgrok/agent_skills_directory
-  - url: "https://cdn.jsdelivr.net/gh/dmgrok/agent_skills_directory@main/catalog.json"
+  # See: https://github.com/dmgrok/agent-plugins
+  - url: "https://cdn.jsdelivr.net/gh/dmgrok/agent-plugins@main/catalog.json"
     priority: 1
     
   # Alternative: Direct from provider repositories

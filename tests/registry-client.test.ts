@@ -218,7 +218,7 @@ skills:
 
     it.skip('should parse toon catalog format', async () => {
       const toonRegistry: RegistrySource[] = [
-        { url: 'https://cdn.jsdelivr.net/gh/dmgrok/agent_skills_directory@main/catalog.json', priority: 1 }
+        { url: 'https://cdn.jsdelivr.net/gh/dmgrok/agent-plugins@main/catalog.json', priority: 1 }
       ];
 
       const toonClient = new RegistryClient(toonRegistry, mockCachePath, 7);
@@ -228,7 +228,7 @@ skills:
       vi.mocked(fs.writeFile).mockResolvedValue(undefined);
 
       const toonContent = `
-$schema: "https://raw.githubusercontent.com/dmgrok/agent_skills_directory/main/schema/catalog-schema.json"
+$schema: "https://raw.githubusercontent.com/dmgrok/agent-plugins/main/schema/catalog-schema.json"
 version: 2026.01.09
 generated_at: "2026-01-09T13:28:40.037090+00:00"
 total_skills: 1
@@ -533,6 +533,10 @@ Instructions for TypeScript development.
 
       const bundles = await client.getAllBundles();
 
+      expect(mockFetch).toHaveBeenCalledWith(
+        'https://cdn.jsdelivr.net/gh/dmgrok/agent-plugins@main/bundles.json',
+        expect.any(Object)
+      );
       expect(bundles).toHaveLength(2);
       expect(bundles[0].id).toBe('frontend-react');
       expect(bundles[0].skills).toContain('anthropics/frontend-design');

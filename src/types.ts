@@ -3,11 +3,11 @@
  * 
  * IMPORTANT: Mother MCP is a CONSUMER of registry data, not the source.
  * Quality signals (downloads, stars, verified status) come FROM external
- * registries like the agent_skills_directory catalog. Mother fetches and
+ * registries like the agent-plugins catalog. Mother fetches and
  * displays this data but does not generate or track it.
  * 
  * The canonical skill registry is:
- * https://github.com/dmgrok/agent_skills_directory
+ * https://github.com/dmgrok/agent-plugins
  */
 
 // Agent types
@@ -65,7 +65,7 @@ export interface SkillCompatibility {
  * catalog. Mother MCP does not track or generate this data - it only
  * consumes and displays what the registry provides.
  * 
- * The agent_skills_directory catalog includes:
+ * The agent-plugins catalog includes:
  * - Skill metadata from GitHub repos (Anthropic, OpenAI, GitHub, etc.)
  * - Provider information and source URLs
  * - Duplicate detection and similarity scores
@@ -93,8 +93,8 @@ export interface RegistrySkill {
 /**
  * Curated skill bundles for common use cases
  * 
- * Bundles are defined in the agent_skills_directory and consumed by Mother MCP.
- * Bundle data comes from: https://github.com/dmgrok/agent_skills_directory/bundles.json
+ * Bundles are defined in agent-plugins and consumed by Mother MCP.
+ * Bundle data comes from: https://github.com/dmgrok/agent-plugins/blob/main/bundles.json
  * 
  * Skills are referenced by their full ID (e.g., "anthropics/mcp-builder")
  */

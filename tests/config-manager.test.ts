@@ -92,7 +92,7 @@ registry: []
 
       expect(config.registry).toEqual([
         {
-          url: 'https://cdn.jsdelivr.net/gh/dmgrok/agent_skills_directory@main/catalog.json',
+          url: 'https://cdn.jsdelivr.net/gh/dmgrok/agent-plugins@main/catalog.json',
           priority: 1
         }
       ]);

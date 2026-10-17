@@ -1,10 +1,10 @@
 # Example: Skills Registry Index
 # 
 # NOTE: This is an EXAMPLE file showing the registry format.
-# For production use, Mother MCP consumes from the agent_skills_directory:
+# For production use, Mother MCP consumes from agent-plugins:
 # 
-# Skills:  https://cdn.jsdelivr.net/gh/dmgrok/agent_skills_directory@main/catalog.json
-# Bundles: https://cdn.jsdelivr.net/gh/dmgrok/agent_skills_directory@main/bundles.json
+# Skills:  https://cdn.jsdelivr.net/gh/dmgrok/agent-plugins@main/catalog.json
+# Bundles: https://cdn.jsdelivr.net/gh/dmgrok/agent-plugins@main/bundles.json
 #
 # Mother MCP is a CONSUMER of this data, not the source.
 # Quality signals (downloads, stars, verified) come FROM the registry.
@@ -12,7 +12,7 @@
 version: "1.0"
 last_updated: "2026-01-23T00:00:00Z"
 
-# The agent_skills_directory catalog is the canonical source for:
+# The agent-plugins catalog is the canonical source for:
 # - Skills metadata from providers (Anthropic, OpenAI, GitHub, Vercel, HuggingFace, etc.)
 # - Curated bundles (collections of skills by use case)
 # - Quality signals (stars, downloads, verification status)
@@ -20,4 +20,4 @@ last_updated: "2026-01-23T00:00:00Z"
 # Skills are fetched from catalog.json
 # Bundles are fetched from bundles.json (contributed separately)
 # 
-# See: https://github.com/dmgrok/agent_skills_directory
+# See: https://github.com/dmgrok/agent-plugins
