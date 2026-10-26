@@ -446,14 +446,14 @@ skills:
     verified: true             # Publisher verified badge
     publisher:
       name: "Mother Skills Team"
-      url: "https://github.com/mother-mcp"
+      url: "https://github.com/example-org"
       verified: true
     compatibility:             # Agent compatibility matrix
       claude: true
       copilot: true
       codex: true
       v0: true
-    repository: "https://github.com/mother-mcp/skills"
+    repository: "https://github.com/example-org/skills"
 ```
 
 | Field | Description |
